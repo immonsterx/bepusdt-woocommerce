@@ -170,6 +170,23 @@
 	padding: 11px 14px;
 }
 
+.bepusdt-wc-notice a {
+	color: #fff;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.bepusdt-wc-notice-link-text {
+	border-bottom: 2px dotted currentColor;
+	padding-bottom: 2px;
+}
+
+.bepusdt-wc-notice a:hover,
+.bepusdt-wc-notice a:focus {
+	color: #d8fff0;
+	outline: none;
+}
+
 .bepusdt-wc-payment {
 	background: #fff;
 	border: 1px solid #e7eaf0;

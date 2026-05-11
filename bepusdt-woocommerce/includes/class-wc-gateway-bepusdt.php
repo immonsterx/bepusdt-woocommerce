@@ -154,7 +154,7 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 						</span>
 					</button>
 					<?php foreach ( $this->other_methods() as $method ) : ?>
-						<button type="button" class="bepusdt-wc-method bepusdt-wc-method--image" data-bepusdt-disabled-method aria-disabled="true" aria-label="<?php echo esc_attr( $method['brand'] ); ?>" aria-pressed="false">
+						<button type="button" class="bepusdt-wc-method bepusdt-wc-method--image" data-bepusdt-disabled-method data-bepusdt-method-name="<?php echo esc_attr( $method['brand'] ); ?>" aria-disabled="true" aria-label="<?php echo esc_attr( $method['brand'] ); ?>" aria-pressed="false">
 							<span class="bepusdt-wc-method-card">
 								<img src="<?php echo esc_url( $method['image'] ); ?>" alt="" loading="lazy" />
 							</span>
@@ -420,7 +420,7 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	private function other_methods() {
 		return array(
 			array(
-				'brand' => 'Visa',
+				'brand' => 'VISA',
 				'image' => BEPUSDT_WC_URL . 'assets/images/visa.svg',
 			),
 			array(
