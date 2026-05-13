@@ -12,7 +12,7 @@
 	margin-top: 12px;
 }
 
-.bepusdt-wc-visual-options {
+.bepusdt-wc-usdt-option {
 	clear: both;
 	display: block;
 	width: 100%;
@@ -70,8 +70,8 @@
 	width: 100%;
 }
 
-.bepusdt-wc-checkout button.bepusdt-wc-method:not([data-bepusdt-disabled-method]):hover .bepusdt-wc-method-card,
-.bepusdt-wc-checkout button.bepusdt-wc-method:not([data-bepusdt-disabled-method]):focus .bepusdt-wc-method-card {
+.bepusdt-wc-checkout button.bepusdt-wc-method:hover .bepusdt-wc-method-card,
+.bepusdt-wc-checkout button.bepusdt-wc-method:focus .bepusdt-wc-method-card {
 	background: #f8fafc;
 	border-color: #aeb8c8;
 	transform: translateY(-1px);
@@ -93,17 +93,6 @@
 	background: #e9fff6;
 	border-color: #18a974;
 	transform: scale(1.02);
-}
-
-.bepusdt-wc-method[data-bepusdt-disabled-method] {
-	cursor: pointer;
-}
-
-.bepusdt-wc-checkout button.bepusdt-wc-method[data-bepusdt-disabled-method]:hover .bepusdt-wc-method-card,
-.bepusdt-wc-checkout button.bepusdt-wc-method[data-bepusdt-disabled-method]:focus .bepusdt-wc-method-card {
-	background: #fff;
-	border-color: #d8dee8;
-	transform: none;
 }
 
 .bepusdt-wc-method--image {

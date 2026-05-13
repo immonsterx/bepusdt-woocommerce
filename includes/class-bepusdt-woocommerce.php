@@ -112,12 +112,10 @@ final class BEpusdt_WooCommerce {
 			'bepusdt-wc-frontend',
 			'bepusdtWc',
 			array(
-				'ajaxUrl'            => admin_url( 'admin-ajax.php' ),
-				'locale'             => BEpusdt_WC_I18n::current_locale(),
-				'unsupportedMessage' => __( 'This payment method is unavailable for the current address. Please choose USDT payment.', 'bepusdt-woocommerce' ),
-				'unsupportedTemplate' => __( 'This address cannot use %s payment. Please choose USDT payment.', 'bepusdt-woocommerce' ),
-				'guideHtml'          => $gateway ? $gateway->get_payment_guide_html() : '',
-				'paidMessage'        => __( 'Payment confirmed. Refreshing order status...', 'bepusdt-woocommerce' ),
+				'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+				'locale'      => BEpusdt_WC_I18n::current_locale(),
+				'guideHtml'   => $gateway ? $gateway->get_payment_guide_html() : '',
+				'paidMessage' => __( 'Payment confirmed. Refreshing order status...', 'bepusdt-woocommerce' ),
 			)
 		);
 	}

@@ -29,21 +29,6 @@
 		notice.hidden = true;
 	}
 
-	function showNotice(container, message, autoClose) {
-		var notice = noticeElement(container);
-		if (!notice) {
-			return;
-		}
-
-		notice.textContent = message;
-
-		if (autoClose) {
-			notice._bepusdtTimer = window.setTimeout(function () {
-				hideNotice(container);
-			}, 3600);
-		}
-	}
-
 	function showGuideNotice(container) {
 		if (!hasGuideNotice()) {
 			hideNotice(container);
@@ -56,35 +41,6 @@
 		}
 
 		notice.innerHTML = settings.guideHtml;
-	}
-
-	function disabledMethodMessage(method) {
-		var brand = method.getAttribute('data-bepusdt-method-name') || method.getAttribute('aria-label') || '';
-		var template = settings.unsupportedTemplate || '當前地址無法使用 %s 支付，請選擇 USDT 支付。';
-
-		if (!brand) {
-			return settings.unsupportedMessage || '當前地址無法使用此支付方式，請選擇 USDT 支付。';
-		}
-
-		return template.replace('%s', brand);
-	}
-
-	function restoreDefaultNotice(container) {
-		var notice = container.querySelector('[data-bepusdt-notice]');
-		if (!notice) {
-			return;
-		}
-
-		window.clearTimeout(notice._bepusdtTimer);
-		notice._bepusdtTimer = window.setTimeout(function () {
-			var primary = container.querySelector('[data-bepusdt-primary-method]');
-			selectMethod(primary);
-			if (primary && hasGuideNotice()) {
-				showGuideNotice(container);
-			} else {
-				hideNotice(container);
-			}
-		}, 3600);
 	}
 
 	function selectMethod(method) {
@@ -116,9 +72,8 @@
 		});
 	}
 
-	function keepPrimarySelected(method) {
-		var checkout = method.closest('[data-bepusdt-checkout]');
-		var primary = checkout ? checkout.querySelector('[data-bepusdt-primary-method]') : method;
+	function keepPrimarySelected(checkout) {
+		var primary = checkout ? checkout.querySelector('[data-bepusdt-primary-method]') : null;
 		selectMethod(primary);
 		window.setTimeout(function () {
 			selectMethod(primary);
@@ -137,24 +92,9 @@
 			event.stopImmediatePropagation();
 		}
 
-		var disabledMethod = event.target.closest('[data-bepusdt-disabled-method]');
-		if (disabledMethod) {
-			var checkout = disabledMethod.closest('[data-bepusdt-checkout]');
-			if (checkout) {
-				var primary = checkout.querySelector('[data-bepusdt-primary-method]');
-				selectMethod(primary);
-				showNotice(checkout, disabledMethodMessage(disabledMethod), !(primary && hasGuideNotice()));
-				if (primary && hasGuideNotice()) {
-					restoreDefaultNotice(checkout);
-				}
-				return;
-			}
-			showNotice(document, disabledMethodMessage(disabledMethod), !hasGuideNotice());
-			return;
-		}
-
-		keepPrimarySelected(method);
-		showGuideNotice(method.closest('[data-bepusdt-checkout]') || document);
+		var checkout = method.closest('[data-bepusdt-checkout]');
+		keepPrimarySelected(checkout);
+		showGuideNotice(checkout || document);
 	}
 
 	document.addEventListener('pointerdown', handleMethodEvent, true);

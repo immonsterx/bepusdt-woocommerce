@@ -97,14 +97,6 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 				),
 				'desc_tip'          => true,
 			),
-			'visual_methods'     => array(
-				'title'       => __( 'Visual Payment Options', 'bepusdt-woocommerce' ),
-				'type'        => 'visual_methods',
-				'default'     => array(),
-				'options'     => $this->visual_method_options(),
-				'description' => __( 'Drag to reorder. Checked options are shown on the frontend in this order. Visual payment options only; no real payment functionality.', 'bepusdt-woocommerce' ),
-				'desc_tip'    => true,
-			),
 			'payment_guide_html' => array(
 				'title'       => __( 'Payment Guide HTML', 'bepusdt-woocommerce' ),
 				'type'        => 'textarea',
@@ -142,45 +134,16 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 
 		?>
 		<div class="bepusdt-wc-checkout" data-bepusdt-checkout>
-			<?php $visual_methods = $this->get_enabled_visual_methods(); ?>
-			<?php if ( $visual_methods ) : ?>
-				<div class="bepusdt-wc-visual-options" role="group" aria-label="<?php esc_attr_e( 'Visual payment options', 'bepusdt-woocommerce' ); ?>">
-					<div class="bepusdt-wc-method-grid">
-						<?php foreach ( $visual_methods as $method_id ) : ?>
-							<?php $method = $this->get_visual_method_data( $method_id ); ?>
-							<?php if ( ! $method ) : ?>
-								<?php continue; ?>
-							<?php endif; ?>
-							<?php
-							$is_primary     = 'usdt' === $method_id;
-							$button_classes = array( 'bepusdt-wc-method', 'bepusdt-wc-method--image' );
-
-							if ( $is_primary ) {
-								$button_classes[] = 'bepusdt-wc-method--active';
-							}
-							?>
-							<button
-								type="button"
-								class="<?php echo esc_attr( implode( ' ', $button_classes ) ); ?>"
-								aria-label="<?php echo esc_attr( $method['brand'] ); ?>"
-								aria-pressed="<?php echo $is_primary ? 'true' : 'false'; ?>"
-								<?php if ( $is_primary ) : ?>
-									data-bepusdt-primary-method
-								<?php else : ?>
-									data-bepusdt-disabled-method
-									data-bepusdt-method-name="<?php echo esc_attr( $method['brand'] ); ?>"
-									aria-disabled="true"
-								<?php endif; ?>
-							>
-								<span class="bepusdt-wc-method-card">
-									<img src="<?php echo esc_url( $method['image'] ); ?>" alt="" loading="lazy" />
-								</span>
-							</button>
-						<?php endforeach; ?>
-					</div>
+			<div class="bepusdt-wc-usdt-option" role="group" aria-label="<?php esc_attr_e( 'USDT payment option', 'bepusdt-woocommerce' ); ?>">
+				<div class="bepusdt-wc-method-grid">
+					<button type="button" class="bepusdt-wc-method bepusdt-wc-method--image bepusdt-wc-method--active" data-bepusdt-primary-method aria-label="<?php esc_attr_e( 'USDT', 'bepusdt-woocommerce' ); ?>" aria-pressed="true">
+						<span class="bepusdt-wc-method-card">
+							<img src="<?php echo esc_url( BEPUSDT_WC_URL . 'assets/images/usdt.svg' ); ?>" alt="" loading="lazy" />
+						</span>
+					</button>
 				</div>
-				<div class="bepusdt-wc-notice" data-bepusdt-notice hidden></div>
-			<?php endif; ?>
+			</div>
+			<div class="bepusdt-wc-notice" data-bepusdt-notice hidden></div>
 		</div>
 		<?php
 	}
@@ -324,137 +287,6 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * Render a sortable checkbox list for visual payment options.
-	 *
-	 * @param string $key Field key.
-	 * @param array  $data Field data.
-	 * @return string
-	 */
-	public function generate_visual_methods_html( $key, $data ) {
-		$field_key   = $this->get_field_key( $key );
-		$defaults    = array(
-			'title'       => '',
-			'disabled'    => false,
-			'desc_tip'    => false,
-			'description' => '',
-			'options'     => array(),
-		);
-		$data        = wp_parse_args( $data, $defaults );
-		$description = $this->get_description_html( $data );
-		$selected    = $this->get_option( $key, array() );
-
-		if ( ! is_array( $selected ) ) {
-			$selected = array_filter( array_map( 'trim', explode( ',', (string) $selected ) ) );
-		}
-
-		$options = $this->ordered_visual_method_options( $selected );
-		$list_id = $field_key . '_sortable';
-
-		ob_start();
-		?>
-		<tr valign="top">
-			<th scope="row" class="titledesc">
-				<label><?php echo wp_kses_post( $data['title'] ); ?> <?php echo wp_kses_post( $this->get_tooltip_html( $data ) ); ?></label>
-			</th>
-			<td class="forminp">
-				<fieldset>
-					<ul id="<?php echo esc_attr( $list_id ); ?>" class="bepusdt-admin-sortable-methods">
-						<?php foreach ( $options as $method_id => $label ) : ?>
-							<li class="bepusdt-admin-sortable-method" draggable="true">
-								<span class="bepusdt-admin-sortable-method__handle" aria-hidden="true">&#8597;</span>
-								<label>
-									<input type="checkbox" name="<?php echo esc_attr( $field_key ); ?>[]" value="<?php echo esc_attr( $method_id ); ?>" <?php checked( in_array( $method_id, $selected, true ) ); ?> <?php disabled( $data['disabled'], true ); ?> />
-									<?php echo esc_html( $label ); ?>
-								</label>
-							</li>
-						<?php endforeach; ?>
-					</ul>
-					<?php echo wp_kses_post( $description ); ?>
-				</fieldset>
-				<style>
-					.bepusdt-admin-sortable-methods {
-						margin: 0 0 8px;
-						max-width: 420px;
-					}
-					.bepusdt-admin-sortable-method {
-						align-items: center;
-						background: #fff;
-						border: 1px solid #dcdcde;
-						border-radius: 6px;
-						cursor: grab;
-						display: flex;
-						gap: 8px;
-						margin: 0 0 8px;
-						padding: 9px 10px;
-					}
-					.bepusdt-admin-sortable-method.is-dragging {
-						opacity: 0.55;
-					}
-					.bepusdt-admin-sortable-method__handle {
-						color: #646970;
-						font-size: 15px;
-						line-height: 1;
-					}
-				</style>
-				<script>
-					(function () {
-						var list = document.getElementById(<?php echo wp_json_encode( $list_id ); ?>);
-						if (!list || list.dataset.bepusdtSortableReady) {
-							return;
-						}
-
-						list.dataset.bepusdtSortableReady = '1';
-
-						function itemAfterPointer(y) {
-							var items = [].slice.call(list.querySelectorAll('.bepusdt-admin-sortable-method:not(.is-dragging)'));
-							return items.reduce(function (closest, child) {
-								var box = child.getBoundingClientRect();
-								var offset = y - box.top - box.height / 2;
-								if (offset < 0 && offset > closest.offset) {
-									return { offset: offset, element: child };
-								}
-								return closest;
-							}, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
-						}
-
-						list.addEventListener('dragstart', function (event) {
-							var item = event.target.closest('.bepusdt-admin-sortable-method');
-							if (!item) {
-								return;
-							}
-							item.classList.add('is-dragging');
-							event.dataTransfer.effectAllowed = 'move';
-						});
-
-						list.addEventListener('dragend', function (event) {
-							var item = event.target.closest('.bepusdt-admin-sortable-method');
-							if (item) {
-								item.classList.remove('is-dragging');
-							}
-						});
-
-						list.addEventListener('dragover', function (event) {
-							event.preventDefault();
-							var dragging = list.querySelector('.is-dragging');
-							if (!dragging) {
-								return;
-							}
-							var after = itemAfterPointer(event.clientY);
-							if (after) {
-								list.insertBefore(dragging, after);
-							} else {
-								list.appendChild(dragging);
-							}
-						});
-					}());
-				</script>
-			</td>
-		</tr>
-		<?php
-		return ob_get_clean();
-	}
-
-	/**
 	 * Return decrypted API token.
 	 *
 	 * @return string
@@ -484,20 +316,6 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	public function validate_enabled_trade_types_field( $key, $value ) {
 		$value   = is_array( $value ) ? array_map( 'sanitize_text_field', wp_unslash( $value ) ) : array();
 		$allowed = array_keys( $this->trade_type_options() );
-
-		return array_values( array_intersect( $value, $allowed ) );
-	}
-
-	/**
-	 * Validate visual payment methods multi-select.
-	 *
-	 * @param string $key Field key.
-	 * @param mixed  $value Submitted value.
-	 * @return array
-	 */
-	public function validate_visual_methods_field( $key, $value ) {
-		$value   = is_array( $value ) ? array_map( 'sanitize_text_field', wp_unslash( $value ) ) : array();
-		$allowed = array_keys( $this->visual_method_options() );
 
 		return array_values( array_intersect( $value, $allowed ) );
 	}
@@ -613,104 +431,4 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 		return esc_url_raw( trim( (string) $value ) );
 	}
 
-	/**
-	 * Visual alternative payment methods.
-	 *
-	 * @return array
-	 */
-	private function other_methods() {
-		return array(
-			array(
-				'id'    => 'usdt',
-				'brand' => 'USDT',
-				'image' => BEPUSDT_WC_URL . 'assets/images/usdt.svg',
-			),
-			array(
-				'id'    => 'visa',
-				'brand' => 'VISA',
-				'image' => BEPUSDT_WC_URL . 'assets/images/visa.svg',
-			),
-			array(
-				'id'    => 'paypal',
-				'brand' => 'PayPal',
-				'image' => BEPUSDT_WC_URL . 'assets/images/paypal.svg',
-			),
-			array(
-				'id'    => 'mastercard',
-				'brand' => 'Mastercard',
-				'image' => BEPUSDT_WC_URL . 'assets/images/mastercard.svg',
-			),
-		);
-	}
-
-	/**
-	 * Visual payment method options.
-	 *
-	 * @return array
-	 */
-	private function visual_method_options() {
-		return array(
-			'usdt'       => __( 'USDT', 'bepusdt-woocommerce' ),
-			'visa'       => __( 'VISA', 'bepusdt-woocommerce' ),
-			'paypal'     => __( 'PayPal', 'bepusdt-woocommerce' ),
-			'mastercard' => __( 'Mastercard', 'bepusdt-woocommerce' ),
-		);
-	}
-
-	/**
-	 * Get visual method data by ID.
-	 *
-	 * @param string $method_id Visual method ID.
-	 * @return array|null
-	 */
-	private function get_visual_method_data( $method_id ) {
-		foreach ( $this->other_methods() as $method ) {
-			if ( $method_id === $method['id'] ) {
-				return $method;
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Return visual method options in saved order, with new options appended.
-	 *
-	 * @param array $saved_order Saved method IDs.
-	 * @return array
-	 */
-	private function ordered_visual_method_options( $saved_order ) {
-		$all     = $this->visual_method_options();
-		$ordered = array();
-
-		foreach ( $saved_order as $method_id ) {
-			if ( isset( $all[ $method_id ] ) ) {
-				$ordered[ $method_id ] = $all[ $method_id ];
-			}
-		}
-
-		foreach ( $all as $method_id => $label ) {
-			if ( ! isset( $ordered[ $method_id ] ) ) {
-				$ordered[ $method_id ] = $label;
-			}
-		}
-
-		return $ordered;
-	}
-
-	/**
-	 * Get enabled visual payment methods.
-	 *
-	 * @return array
-	 */
-	private function get_enabled_visual_methods() {
-		$enabled = $this->get_option( 'visual_methods', array() );
-
-		if ( ! is_array( $enabled ) ) {
-			$enabled = array_filter( array_map( 'trim', explode( ',', (string) $enabled ) ) );
-		}
-
-		$allowed = array_keys( $this->visual_method_options() );
-		return array_values( array_intersect( $enabled, $allowed ) );
-	}
 }

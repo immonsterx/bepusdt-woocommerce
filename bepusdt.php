@@ -3,7 +3,7 @@
  * Plugin Name: BEpusdt for WooCommerce
  * Plugin URI: https://github.com/immonsterx/bepusdt-woocommerce
  * Description: Adds a lightweight BEpusdt cryptocurrency payment gateway for WooCommerce.
- * Version: 1.3.1
+ * Version: 1.4.0
  * Author: Monster
  * Author URI: https://guaishoux.com/
  * Text Domain: bepusdt-woocommerce
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BEPUSDT_WC_VERSION', '1.3.1' );
+define( 'BEPUSDT_WC_VERSION', '1.4.0' );
 define( 'BEPUSDT_WC_FILE', __FILE__ );
 define( 'BEPUSDT_WC_PATH', plugin_dir_path( __FILE__ ) );
 define( 'BEPUSDT_WC_URL', plugin_dir_url( __FILE__ ) );
