@@ -1,34 +1,41 @@
 # BEpusdt for WooCommerce
 
-这是一个面向 WooCommerce 的 USDT 支付网关插件，用于把 WooCommerce 订单接入 BEpusdt 后端收银台。插件会在 WooCommerce 结账页提供 USDT 支付方式，并在订单提交后的 Thank You 页面显示 USDT 网络选择卡片。用户选择可用链后，插件会创建 BEpusdt 支付订单并跳转到 BEpusdt 收银台完成付款。
+BEpusdt for WooCommerce 是一个 WordPress + WooCommerce 加密货币收款插件，用于把 WooCommerce 订单接入 BEpusdt 后端收银台。插件负责在 WooCommerce 中注册支付网关、生成支付请求、展示前端支付入口，并通过 BEpusdt 回调或轮询同步订单支付状态。
 
-插件当前版本：`1.1.9`
+插件当前版本：`1.2.0`
+
+## BEpusdt 是什么
+
+BEpusdt 是一个开源的个人加密货币收款网关，项目地址：
+
+```text
+https://github.com/v03413/BEpusdt
+```
+
+BEpusdt 后端不仅支持 USDT，也支持多条区块链网络和更多币种收款。官方项目说明中列出的主流网络包括 TRON、Ethereum、BSC、Polygon，并扩展支持 X-Layer、Solana、Aptos、Arbitrum-One、Base 等网络。实际可用网络、币种和收款能力以你部署的 BEpusdt 后端配置为准。
+
+本插件的职责不是替代 BEpusdt 后端，而是把 WordPress + WooCommerce 商城订单与 BEpusdt 收银台连接起来。当前插件后台默认提供 USDT TRC20、USDT Polygon、USDT ERC20 这几种前端链按钮，后续可以继续扩展更多 BEpusdt `trade_type`，用于支持更多链或代币。
 
 ## 项目作用
 
-本项目的核心作用是让 WordPress + WooCommerce 商城支持 USDT 收款。
+这个项目适合需要在 WooCommerce 商城中接入加密货币收款的站点。它主要完成以下工作：
 
-它负责完成以下工作：
-
-- 在 WooCommerce 后台注册一个 USDT 支付网关。
-- WooCommerce 后台可选择是否显示 USDT、VISA、PayPal、Mastercard 等视觉支付选项。
-- 如果显示 USDT 视觉选项，USDT 默认选中，并显示 `👉 查看 USDT 支付教學` 链接。
-- VISA、PayPal、Mastercard 只作为视觉选项，不可真正选择；点击时按品牌提示，例如：`當前地址無法使用 VISA 支付，請選擇 USDT 支付。`
-- 订单提交成功后，在 WooCommerce Thank You 页面插入 USDT 支付卡片。
-- 在支付卡片中显示订单信息和可用 USDT 网络按钮。
-- 用户点击 USDT 网络后，插件向 BEpusdt 后端创建支付订单。
-- 创建成功后跳转到 BEpusdt 收银台。
-- 通过 BEpusdt 回调或定时轮询同步 WooCommerce 订单支付状态。
+- 在 WooCommerce 后台注册 BEpusdt 支付网关。
+- 在 WooCommerce 结账页显示加密货币支付方式。
+- 可选择显示 USDT、VISA、PayPal、Mastercard 等视觉化支付选项。
+- 视觉化支付选项只用于前端展示，不代表 VISA、PayPal、Mastercard 已接入真实支付。
+- 用户提交订单后，在 WooCommerce Thank You 页面插入支付卡片。
+- 用户在支付卡片中选择可用链后，插件向 BEpusdt 创建支付订单。
+- 创建成功后跳转到 BEpusdt 收银台完成付款。
+- 通过 BEpusdt 回调或 WordPress Cron 轮询同步 WooCommerce 订单状态。
 
 ## 适用场景
 
-这个插件适合以下场景：
-
-- WooCommerce 商城需要接入 USDT 支付。
+- WordPress + WooCommerce 商城需要接入加密货币收款。
 - 商家已经部署或准备部署 BEpusdt 后端。
-- 结账页需要展示常见国际支付方式的视觉选项，但实际只开放 USDT。
-- 需要支持 TRC20、Polygon、ERC20 等 USDT 链。
-- 希望在 WooCommerce 默认结账和 Thank You 页面内完成支付引导，不重写整套 WooCommerce 页面。
+- 站点希望使用 WooCommerce 默认结账流程，同时在 Thank You 页面加入加密货币支付卡片。
+- 当前希望优先开放 USDT 收款，后续可能扩展更多链或代币。
+- 结账页需要展示常见支付方式的视觉入口，但实际引导用户使用加密货币支付。
 
 ## 插件目录结构
 
@@ -36,106 +43,125 @@
 bepusdt-woocommerce/
   assets/
     css/
-      frontend.css              # 前端结账页、Thank You 支付卡片样式
+      frontend.css                # 前端结账页和 Thank You 支付卡片样式
     images/
-      usdt.svg                  # USDT 视觉选项图标
-      visa.svg                  # Visa 视觉选项图标
-      paypal.svg                # PayPal 视觉选项图标
-      mastercard.svg            # Mastercard 视觉选项图标
+      usdt.svg                    # USDT 视觉选项图标
+      visa.svg                    # VISA 视觉选项图标
+      paypal.svg                  # PayPal 视觉选项图标
+      mastercard.svg              # Mastercard 视觉选项图标
     js/
-      frontend.js               # 前端支付选项点击、提示、订单状态轮询
+      frontend.js                 # 前端支付选项点击、提示、订单状态轮询
   includes/
-    class-bepusdt-api.php       # BEpusdt API 请求、签名、状态查询、日志
-    class-bepusdt-i18n.php      # 多语言回退文案
+    class-bepusdt-api.php         # BEpusdt API 请求、签名、状态查询、日志
+    class-bepusdt-i18n.php        # 多语言回退文案
     class-bepusdt-woocommerce.php # 插件主流程、资源加载、回调、轮询、短代码
     class-wc-gateway-bepusdt.php  # WooCommerce 支付网关类和后台设置
   languages/
-    bepusdt-woocommerce.pot     # 翻译模板
+    bepusdt-woocommerce.pot       # 翻译模板
   templates/
-    payment-instructions.php    # Thank You 页面支付卡片模板
-  bepusdt.php                   # 插件入口文件
-  README.md                     # 项目说明和维护文档
+    payment-instructions.php      # Thank You 页面支付卡片模板
+  bepusdt.php                     # 插件入口文件
+  README.md                       # 插件说明文档
 ```
+
+## 安装方法
+
+1. 确认 WordPress 和 WooCommerce 已安装并启用。
+2. 部署 BEpusdt 后端，并确认可以访问 BEpusdt 收银台和 API。
+3. 把 `bepusdt-woocommerce` 文件夹上传到：
+
+```text
+wp-content/plugins/
+```
+
+4. 在 WordPress 后台启用插件：
+
+```text
+Plugins > BEpusdt for WooCommerce > Activate
+```
+
+5. 进入 WooCommerce 支付设置启用网关：
+
+```text
+WooCommerce > Settings > Payments > BEpusdt USDT
+```
+
+## 后台设置说明
+
+主要设置项：
+
+- Enable/Disable：启用或停用支付网关。
+- Title：前台支付方式标题，留空则前台不显示。
+- Description：前台支付方式描述，留空则前台不显示。
+- BEpusdt API URL：BEpusdt 后端地址，例如 `https://pay.example.com`。
+- API Token / Secret：BEpusdt API 密钥，保存后后台按令牌字符数量显示星号。
+- Frontend Chain Buttons：Thank You 页面显示哪些链按钮。当前默认面向 USDT TRC20、USDT Polygon、USDT ERC20。
+- Payment Expiration：支付过期时间，单位为秒。
+- Visual Payment Options：默认关闭，可多选 USDT、VISA、PayPal、Mastercard。该选项仅用于视觉化展示，无实质支付功能。
+- Automatic Status Polling：是否定时查询待付款订单状态，防止回调失败导致订单不同步。
+- Debug Log：是否记录 WooCommerce 调试日志，敏感字段会脱敏。
+
+支付货币不单独设置，插件会读取 WooCommerce 当前货币并传给 BEpusdt。
+
+## 使用方法
+
+1. 在 BEpusdt 后端完成收款钱包、网络、代币、汇率和收银台配置。
+2. 在 WooCommerce 后台启用 `BEpusdt USDT` 支付方式。
+3. 填写 BEpusdt API URL 和 API Token / Secret。
+4. 在 `Frontend Chain Buttons` 中选择前台允许用户点击的链按钮。
+5. 如需在结账页展示支付方式图标，在 `Visual Payment Options` 中选择需要显示的视觉选项。
+6. 创建一个测试商品并下单。
+7. 在结账页选择加密货币支付方式并提交订单。
+8. 到达 WooCommerce Thank You 页面后，点击需要使用的链按钮。
+9. 插件创建 BEpusdt 支付订单，并在新页面打开 BEpusdt 收银台。
+10. 用户完成付款后，BEpusdt 通过回调或轮询结果让 WooCommerce 订单变为已支付。
+
+如果你的 BEpusdt 后端需要手动填写回调地址，可以使用：
+
+```text
+https://your-site.example/wc-api/bepusdt_wc_notify
+```
+
+请把 `your-site.example` 替换成你的 WordPress 网站域名。
 
 ## 前端支付方式逻辑
 
-结账页的视觉支付方式在 `includes/class-wc-gateway-bepusdt.php` 的 `payment_fields()` 方法中输出。
+结账页视觉支付方式由后台 `Visual Payment Options` 控制，默认不显示。
 
-当前输出结构：
+- USDT：作为主视觉支付方式，默认选中；点击后保持选中，并显示 USDT 支付教学链接。
+- VISA / PayPal / Mastercard：只作为视觉化选项；点击后会提示当前地址无法使用对应支付方式，并自动回到 USDT 提示。
 
-- USDT 按钮：
-  - 默认带有 `bepusdt-wc-method--active`
-  - 带有 `data-bepusdt-primary-method`
-  - `aria-pressed="true"`
-  - 永远保持选中状态
+视觉支付选项的按钮结构和样式在以下文件中维护：
 
-- Visa / PayPal / Mastercard：
-  - 带有 `data-bepusdt-disabled-method`
-  - 带有 `aria-disabled="true"`
-  - 点击后只显示提示，不会进入选中状态
-
-每个支付选项图片外都有一层圆角边框外框：
-
-```html
-<span class="bepusdt-wc-method-card">
-  <img src="..." alt="" loading="lazy" />
-</span>
+```text
+assets/css/frontend.css
+assets/js/frontend.js
 ```
 
-前端样式在 `assets/css/frontend.css`：
+支付图标文件在：
 
-- `.bepusdt-wc-method-card` 控制每个支付图片外面的圆角边框。
-- USDT 选中态直接绑定 `button[data-bepusdt-primary-method]`，即使外部脚本移除 active class，USDT 也会继续显示为选中。
-- 外层 `button` 已清除主题默认按钮背景、边框和阴影，尽量避免主题样式覆盖。
-
-前端交互在 `assets/js/frontend.js`：
-
-- 拦截 `pointerdown` 和 `click`。
-- USDT 点击后会继续保持选中并隐藏提示。
-- 其他方式点击后保持 USDT 选中并显示不可用提示。
-- WooCommerce 更新结账片段后，会自动恢复 USDT 选中状态。
+```text
+assets/images/usdt.svg
+assets/images/visa.svg
+assets/images/paypal.svg
+assets/images/mastercard.svg
+```
 
 ## Thank You 页面支付流程
 
-用户在 WooCommerce 结账页选择 USDT 支付并提交订单后：
+用户在 WooCommerce 结账页提交订单后，会进入 WooCommerce Thank You 页面。插件会在该页面插入支付卡片：
 
-1. WooCommerce 创建订单。
-2. 插件把订单状态设为待付款。
-3. 用户跳转到 WooCommerce Thank You 页面。
-4. 插件通过 `woocommerce_thankyou_bepusdt` 钩子插入支付卡片。
-5. 支付卡片显示订单编号、订单日期、订单总额、支付方式、交易 ID 等信息。
-6. 支付卡片底部显示后台启用的 USDT 网络按钮。
-7. 用户点击某条链，例如 TRC20 或 Polygon。
-8. 插件调用 BEpusdt 创建支付订单。
-9. 创建成功后新页面跳转到 BEpusdt 收银台。
+1. 显示 WooCommerce 订单编号、订单日期、订单总额、支付方式、交易 ID 等信息。
+2. 在支付卡片底部显示后台启用的链按钮。
+3. 用户点击某条链，例如 TRC20 或 USDT Polygon。
+4. 插件调用 BEpusdt API 创建支付交易。
+5. 创建成功后，在新页面打开 BEpusdt 收银台。
 
 支付卡片模板文件：
 
 ```text
 templates/payment-instructions.php
 ```
-
-## 后台设置项
-
-后台路径：
-
-```text
-WooCommerce > Settings > Payments > BEpusdt USDT
-```
-
-主要设置：
-
-- Enable/Disable：启用或停用 USDT 支付网关。
-- Title：前台支付方式标题，留空则前台不显示标题。
-- Description：前台支付方式说明，留空则前台不显示说明。
-- BEpusdt API URL：BEpusdt 后端地址。
-- API Token / Secret：BEpusdt API 密钥，保存后后台按令牌字符数量显示星号。
-- Payment Currency：不提供独立设置，插件始终使用 WooCommerce 当前货币发送给 BEpusdt。
-- Frontend Chain Buttons：Thank You 页面可显示的 USDT 网络按钮。
-- Payment Expiration：支付过期时间，单位秒。
-- Visual Payment Options：默认关闭；可多选 USDT、VISA、PayPal、Mastercard，选择什么前台就显示什么。该项仅为视觉化选项，无实质支付功能。
-- Automatic Status Polling：是否定时查询待付款 USDT 订单状态。
-- Debug Log：是否记录 WooCommerce 调试日志。
 
 ## BEpusdt API 对接
 
@@ -150,26 +176,18 @@ https://github.com/v03413/BEpusdt/blob/main/docs/api/api.md
 - 创建支付订单：`POST /api/v1/order/create-transaction`
 - 查询订单状态：`GET /api/v1/order/check-status/{trade_id}`
 
-插件创建支付订单时会发送 WooCommerce 订单号、金额、回调地址、支付链等信息。
+插件创建支付订单时会发送 WooCommerce 订单号、金额、当前 WooCommerce 货币、回调地址和所选 `trade_type`。BEpusdt 后端根据自己的配置生成对应收银台订单。
 
-插件通知地址：
+## 订单状态同步
 
-```text
-https://your-site.example/wc-api/bepusdt_wc_notify
-```
-
-当 BEpusdt 回调或轮询结果表示支付成功时，插件会把 WooCommerce 订单标记为已支付。
-
-## 订单状态同步方式
-
-插件支持两种订单同步方式：
+插件支持两种同步方式：
 
 - 回调同步：BEpusdt 主动请求 WooCommerce 通知地址。
 - 轮询同步：WordPress Cron 定时查询待付款订单状态。
 
-建议正式环境保持 `Automatic Status Polling` 开启。这样即使 BEpusdt 回调失败，插件仍有机会通过定时查询同步订单状态。
+建议正式环境开启 `Automatic Status Polling`。这样即使 BEpusdt 回调失败，插件仍然有机会通过定时查询同步订单状态。
 
-## 多语言说明
+## 多语言
 
 插件使用 WordPress 标准翻译函数：
 
@@ -186,78 +204,6 @@ bepusdt-woocommerce
 
 如果站点启用多语言插件，前台文案会根据当前 WordPress locale 尝试显示对应语言。简体中文和繁体中文有内置回退文案。
 
-## 样式修改入口
-
-前端结账页视觉支付选项：
-
-```text
-assets/css/frontend.css
-```
-
-重点 class：
-
-- `.bepusdt-wc-method-grid`：支付选项网格布局。
-- `.bepusdt-wc-method`：支付按钮外层。
-- `.bepusdt-wc-method-card`：支付图片外面的圆角边框卡片。
-- `.bepusdt-wc-method--active`：选中状态。
-- `[data-bepusdt-primary-method]`：USDT 主支付方式。
-- `[data-bepusdt-disabled-method]`：不可选视觉支付方式。
-
-如果要替换支付图标，直接替换：
-
-```text
-assets/images/usdt.svg
-assets/images/visa.svg
-assets/images/paypal.svg
-assets/images/mastercard.svg
-```
-
-## 交互修改入口
-
-前端点击提示和选中状态：
-
-```text
-assets/js/frontend.js
-```
-
-重要函数：
-
-- `showNotice()`：显示不可用提示。
-- `hideNotice()`：隐藏提示。
-- `selectMethod()`：设置 USDT 选中状态。
-- `resetCheckoutMethods()`：WooCommerce 刷新后恢复 USDT 选中。
-- `keepPrimarySelected()`：点击 USDT 后强制保持选中。
-- `handleMethodEvent()`：处理支付选项点击。
-
-## 后续维护注意事项
-
-- 每次修改代码后需要递增插件版本号。
-- 版本号位置：
-  - `bepusdt.php` 文件头部 `Version`
-  - `bepusdt.php` 中的 `BEPUSDT_WC_VERSION`
-  - `languages/bepusdt-woocommerce.pot` 中的 `Project-Id-Version`
-- 前端资源使用 `BEPUSDT_WC_VERSION` 作为缓存版本号，修改 CSS/JS 后必须更新版本，方便浏览器刷新缓存。
-- 不建议直接改 WooCommerce 模板文件，优先使用插件内模板和 WooCommerce hooks。
-- 不建议引入大型前端库，当前前端只使用原生 CSS 和 JS。
-- API Token 不要输出到前端，不要写入日志明文。
-- 调试日志需要继续保持敏感字段脱敏。
-
-## 安装方式
-
-1. 把 `bepusdt-woocommerce` 文件夹上传到：
-
-```text
-wp-content/plugins/
-```
-
-2. 在 WordPress 后台启用插件：
-
-```text
-Plugins > BEpusdt for WooCommerce > Activate
-```
-
-3. 进入 WooCommerce 支付设置，启用并配置 USDT 支付。
-
 ## 短代码
 
 插件提供短代码：
@@ -266,4 +212,27 @@ Plugins > BEpusdt for WooCommerce > Activate
 [bepusdt_payment_button order_id="123"]
 ```
 
-用于在指定页面输出某个 WooCommerce 订单的 USDT 支付按钮。
+用于在指定页面输出某个 WooCommerce 订单的支付按钮。
+
+## 扩展更多链或代币
+
+BEpusdt 后端支持的链和代币比当前插件默认按钮更多。如果需要扩展新的链或代币，通常需要修改：
+
+- `includes/class-wc-gateway-bepusdt.php` 中的 `trade_type_options()`。
+- `templates/payment-instructions.php` 中链按钮的显示逻辑。
+- 必要时补充前端文案和样式。
+
+扩展时需要确保新增的 `trade_type` 与 BEpusdt 后端实际支持的类型一致。
+
+## 维护注意事项
+
+- 每次修改代码后需要递增插件版本号。
+- 版本号位置：
+  - `bepusdt.php` 文件头部 `Version`
+  - `bepusdt.php` 中的 `BEPUSDT_WC_VERSION`
+  - `languages/bepusdt-woocommerce.pot` 中的 `Project-Id-Version`
+- 前端资源使用 `BEPUSDT_WC_VERSION` 作为缓存版本号，修改 CSS/JS 后必须更新版本，方便浏览器刷新缓存。
+- 不建议直接修改 WooCommerce 模板文件，优先使用插件模板和 WooCommerce hooks。
+- 不建议引入大型前端库，当前前端只使用原生 CSS 和 JS。
+- API Token 不要输出到前端，不要写入日志明文。
+- 调试日志需要继续保持敏感字段脱敏。
