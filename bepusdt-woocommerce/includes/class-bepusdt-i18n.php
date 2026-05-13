@@ -166,6 +166,13 @@ final class BEpusdt_WC_I18n {
 			'This address cannot use %s payment. Please choose USDT payment.' => self::u( '\u5f53\u524d\u5730\u5740\u65e0\u6cd5\u4f7f\u7528 %s \u652f\u4ed8\uff0c\u8bf7\u9009\u62e9 USDT \u652f\u4ed8\u3002' ),
 			'Payment confirmed. Refreshing order status...' => self::u( '\u4ed8\u6b3e\u5df2\u786e\u8ba4\uff0c\u6b63\u5728\u5237\u65b0\u8ba2\u5355\u72b6\u6001...' ),
 			'Invalid payment request.' => self::u( '\u65e0\u6548\u7684\u652f\u4ed8\u8bf7\u6c42\u3002' ),
+			'Selected payment network is not available.' => self::u( '\u6240\u9009\u652f\u4ed8\u7f51\u7edc\u4e0d\u53ef\u7528\u3002' ),
+			'Unable to create cryptocurrency payment. Please try again.' => self::u( '\u65e0\u6cd5\u521b\u5efa\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8\uff0c\u8bf7\u91cd\u8bd5\u3002' ),
+			'Cryptocurrency payment started on %s.' => self::u( '\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8\u5df2\u901a\u8fc7 %s \u53d1\u8d77\u3002' ),
+			'Cryptocurrency payment confirmed.' => self::u( '\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8\u5df2\u786e\u8ba4\u3002' ),
+			'Cryptocurrency payment expired.' => self::u( '\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8\u5df2\u8fc7\u671f\u3002' ),
+			'Awaiting customer to choose a payment network.' => self::u( '\u7b49\u5f85\u5ba2\u6237\u9009\u62e9\u652f\u4ed8\u7f51\u7edc\u3002' ),
+			'Pay with cryptocurrency' => self::u( '\u4f7f\u7528\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8' ),
 			'A token is saved and hidden. Replace the stars only if you want to update it.' => self::u( 'Token \u5df2\u4fdd\u5b58\u5e76\u9690\u85cf\u3002\u53ea\u6709\u9700\u8981\u66f4\u65b0\u65f6\u624d\u66ff\u6362\u661f\u53f7\u3002' ),
 		);
 	}
@@ -209,17 +216,6 @@ final class BEpusdt_WC_I18n {
 			'This address cannot use %s payment. Please choose USDT payment.' => self::u( '\u7576\u524d\u5730\u5740\u7121\u6cd5\u4f7f\u7528 %s \u652f\u4ed8\uff0c\u8acb\u9078\u64c7 USDT \u652f\u4ed8\u3002' ),
 			'Payment confirmed. Refreshing order status...' => self::u( '\u4ed8\u6b3e\u5df2\u78ba\u8a8d\uff0c\u6b63\u5728\u91cd\u65b0\u6574\u7406\u8a02\u55ae\u72c0\u614b...' ),
 			'Invalid payment request.' => self::u( '\u7121\u6548\u7684\u652f\u4ed8\u8acb\u6c42\u3002' ),
-			'A token is saved and hidden. Replace the stars only if you want to update it.' => self::u( 'Token \u5df2\u5132\u5b58\u4e26\u96b1\u85cf\u3002\u53ea\u6709\u9700\u8981\u66f4\u65b0\u6642\u624d\u66ff\u63db\u661f\u865f\u3002' ),
-		);
-	}
-}
-			'Selected payment network is not available.' => self::u( '\u6240\u9009\u652f\u4ed8\u7f51\u7edc\u4e0d\u53ef\u7528\u3002' ),
-			'Unable to create cryptocurrency payment. Please try again.' => self::u( '\u65e0\u6cd5\u521b\u5efa\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8\uff0c\u8bf7\u91cd\u8bd5\u3002' ),
-			'Cryptocurrency payment started on %s.' => self::u( '\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8\u5df2\u901a\u8fc7 %s \u53d1\u8d77\u3002' ),
-			'Cryptocurrency payment confirmed.' => self::u( '\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8\u5df2\u786e\u8ba4\u3002' ),
-			'Cryptocurrency payment expired.' => self::u( '\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8\u5df2\u8fc7\u671f\u3002' ),
-			'Awaiting customer to choose a payment network.' => self::u( '\u7b49\u5f85\u5ba2\u6237\u9009\u62e9\u652f\u4ed8\u7f51\u7edc\u3002' ),
-			'Pay with cryptocurrency' => self::u( '\u4f7f\u7528\u52a0\u5bc6\u8d27\u5e01\u652f\u4ed8' ),
 			'Selected payment network is not available.' => self::u( '\u6240\u9078\u652f\u4ed8\u7db2\u8def\u4e0d\u53ef\u7528\u3002' ),
 			'Unable to create cryptocurrency payment. Please try again.' => self::u( '\u7121\u6cd5\u5efa\u7acb\u52a0\u5bc6\u8ca8\u5e63\u652f\u4ed8\uff0c\u8acb\u91cd\u8a66\u3002' ),
 			'Cryptocurrency payment started on %s.' => self::u( '\u52a0\u5bc6\u8ca8\u5e63\u652f\u4ed8\u5df2\u900f\u904e %s \u767c\u8d77\u3002' ),
@@ -227,3 +223,7 @@ final class BEpusdt_WC_I18n {
 			'Cryptocurrency payment expired.' => self::u( '\u52a0\u5bc6\u8ca8\u5e63\u652f\u4ed8\u5df2\u904e\u671f\u3002' ),
 			'Awaiting customer to choose a payment network.' => self::u( '\u7b49\u5f85\u5ba2\u6236\u9078\u64c7\u652f\u4ed8\u7db2\u8def\u3002' ),
 			'Pay with cryptocurrency' => self::u( '\u4f7f\u7528\u52a0\u5bc6\u8ca8\u5e63\u652f\u4ed8' ),
+			'A token is saved and hidden. Replace the stars only if you want to update it.' => self::u( 'Token \u5df2\u5132\u5b58\u4e26\u96b1\u85cf\u3002\u53ea\u6709\u9700\u8981\u66f4\u65b0\u6642\u624d\u66ff\u63db\u661f\u865f\u3002' ),
+		);
+	}
+}

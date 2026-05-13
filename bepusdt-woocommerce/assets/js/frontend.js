@@ -77,8 +77,9 @@
 
 		window.clearTimeout(notice._bepusdtTimer);
 		notice._bepusdtTimer = window.setTimeout(function () {
-			selectMethod(container.querySelector('[data-bepusdt-primary-method]'));
-			if (hasGuideNotice()) {
+			var primary = container.querySelector('[data-bepusdt-primary-method]');
+			selectMethod(primary);
+			if (primary && hasGuideNotice()) {
 				showGuideNotice(container);
 			} else {
 				hideNotice(container);
@@ -105,8 +106,13 @@
 
 	function resetCheckoutMethods(context) {
 		(context || document).querySelectorAll('[data-bepusdt-checkout]').forEach(function (checkout) {
-			selectMethod(checkout.querySelector('[data-bepusdt-primary-method]'));
-			showGuideNotice(checkout);
+			var primary = checkout.querySelector('[data-bepusdt-primary-method]');
+			selectMethod(primary);
+			if (primary) {
+				showGuideNotice(checkout);
+			} else {
+				hideNotice(checkout);
+			}
 		});
 	}
 
@@ -135,9 +141,10 @@
 		if (disabledMethod) {
 			var checkout = disabledMethod.closest('[data-bepusdt-checkout]');
 			if (checkout) {
-				selectMethod(checkout.querySelector('[data-bepusdt-primary-method]'));
-				showNotice(checkout, disabledMethodMessage(disabledMethod), !hasGuideNotice());
-				if (hasGuideNotice()) {
+				var primary = checkout.querySelector('[data-bepusdt-primary-method]');
+				selectMethod(primary);
+				showNotice(checkout, disabledMethodMessage(disabledMethod), !(primary && hasGuideNotice()));
+				if (primary && hasGuideNotice()) {
 					restoreDefaultNotice(checkout);
 				}
 				return;
