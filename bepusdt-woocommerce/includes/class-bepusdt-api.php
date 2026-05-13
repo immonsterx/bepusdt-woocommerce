@@ -174,8 +174,11 @@ class BEpusdt_WC_API {
 			return new WP_Error( 'bepusdt_invalid_json', __( 'BEpusdt returned invalid JSON.', 'bepusdt-woocommerce' ) );
 		}
 
-		$status_code = isset( $json['status_code'] ) ? absint( $json['status_code'] ) : $code;
-		if ( 200 !== $status_code && 200 !== $code ) {
+		$status_code = isset( $json['status_code'] ) ? absint( $json['status_code'] ) : 200;
+		$http_ok     = $code >= 200 && $code < 300;
+		$api_ok      = 200 === $status_code;
+
+		if ( ! $http_ok || ! $api_ok ) {
 			$message = isset( $json['message'] ) ? $json['message'] : __( 'BEpusdt request failed.', 'bepusdt-woocommerce' );
 			$this->log( 'API request failed: ' . $message, $json, 'error' );
 			return new WP_Error( 'bepusdt_api_failed', $message );

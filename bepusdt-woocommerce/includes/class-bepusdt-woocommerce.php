@@ -235,7 +235,8 @@ final class BEpusdt_WooCommerce {
 
 		if ( ! $payment_url || ! $trade_id ) {
 			$api->log( 'Create transaction response missing payment_url or trade_id.', $result, 'error' );
-			$this->redirect_with_payment_error( $order, __( 'Unable to create cryptocurrency payment. Please try again.', 'bepusdt-woocommerce' ) );
+			$message = isset( $result['message'] ) ? sanitize_text_field( $result['message'] ) : __( 'Unable to create cryptocurrency payment. Please try again.', 'bepusdt-woocommerce' );
+			$this->redirect_with_payment_error( $order, $message );
 		}
 
 		$order->update_meta_data( '_bepusdt_trade_type', $trade_type );
