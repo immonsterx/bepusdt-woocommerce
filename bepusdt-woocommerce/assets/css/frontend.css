@@ -140,8 +140,10 @@
 }
 
 .bepusdt-wc-notice a {
+	border-bottom: 2px dotted currentColor;
 	color: #fff;
 	font-weight: 700;
+	padding-bottom: 2px;
 	text-decoration: none;
 }
 

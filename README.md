@@ -2,7 +2,7 @@
 
 BEpusdt for WooCommerce 是一个 WordPress + WooCommerce 加密货币收款插件，用于把 WooCommerce 订单接入 BEpusdt 后端收银台。插件负责在 WooCommerce 中注册支付网关、生成支付请求、展示前端支付入口，并通过 BEpusdt 回调或轮询同步订单支付状态。
 
-插件当前版本：`1.3.0`
+插件当前版本：`1.3.1`
 
 ## BEpusdt 是什么
 
@@ -98,7 +98,7 @@ WooCommerce > Settings > Payments > BEpusdt Crypto
 - Frontend Payment Buttons：Thank You 页面显示哪些 BEpusdt 交易类型按钮。当前内置 BEpusdt 文档列出的主流币种和网络，默认启用 USDT TRC20、USDT Polygon、USDT ERC20。
 - Payment Expiration：支付过期时间，单位为秒。
 - Visual Payment Options：默认关闭，可勾选 USDT、VISA、PayPal、Mastercard，并可拖动排序；后台怎么排序，前台就怎么显示。该选项仅用于视觉化展示，无实质支付功能。
-- Payment Guide HTML：用于设置前台 USDT 支付教程提示 HTML，留空则 USDT 选中时不显示提示。
+- Payment Guide HTML：用于设置前台 USDT 支付教程提示 HTML，留空则 USDT 选中时不显示提示；HTML 中的链接会默认显示点状下划线。
 - Automatic Status Polling：是否定时查询待付款订单状态，防止回调失败导致订单不同步。
 - Debug Log：是否记录 WooCommerce 调试日志，敏感字段会脱敏。
 
