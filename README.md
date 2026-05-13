@@ -2,7 +2,7 @@
 
 BEpusdt for WooCommerce 是一个 WordPress + WooCommerce 加密货币收款插件，用于把 WooCommerce 订单接入 BEpusdt 后端收银台。插件负责在 WooCommerce 中注册支付网关、生成支付请求、展示前端支付入口，并通过 BEpusdt 回调或轮询同步订单支付状态。
 
-插件当前版本：`1.2.0`
+插件当前版本：`1.2.1`
 
 ## BEpusdt 是什么
 
@@ -14,7 +14,7 @@ https://github.com/v03413/BEpusdt
 
 BEpusdt 后端不仅支持 USDT，也支持多条区块链网络和更多币种收款。官方项目说明中列出的主流网络包括 TRON、Ethereum、BSC、Polygon，并扩展支持 X-Layer、Solana、Aptos、Arbitrum-One、Base 等网络。实际可用网络、币种和收款能力以你部署的 BEpusdt 后端配置为准。
 
-本插件的职责不是替代 BEpusdt 后端，而是把 WordPress + WooCommerce 商城订单与 BEpusdt 收银台连接起来。当前插件后台默认提供 USDT TRC20、USDT Polygon、USDT ERC20 这几种前端链按钮，后续可以继续扩展更多 BEpusdt `trade_type`，用于支持更多链或代币。
+本插件的职责不是替代 BEpusdt 后端，而是把 WordPress + WooCommerce 商城订单与 BEpusdt 收银台连接起来。插件后台已内置 BEpusdt 文档列出的主流 `trade_type`，可以选择 USDT、USDC、TRX、ETH、BNB 等币种，以及 TRON、Ethereum、Polygon、BSC、Aptos、Solana、X-Layer、Arbitrum-One、Base、Plasma 等网络。
 
 ## 项目作用
 
@@ -83,7 +83,7 @@ Plugins > BEpusdt for WooCommerce > Activate
 5. 进入 WooCommerce 支付设置启用网关：
 
 ```text
-WooCommerce > Settings > Payments > BEpusdt USDT
+WooCommerce > Settings > Payments > BEpusdt Crypto
 ```
 
 ## 后台设置说明
@@ -95,9 +95,10 @@ WooCommerce > Settings > Payments > BEpusdt USDT
 - Description：前台支付方式描述，留空则前台不显示。
 - BEpusdt API URL：BEpusdt 后端地址，例如 `https://pay.example.com`。
 - API Token / Secret：BEpusdt API 密钥，保存后后台按令牌字符数量显示星号。
-- Frontend Chain Buttons：Thank You 页面显示哪些链按钮。当前默认面向 USDT TRC20、USDT Polygon、USDT ERC20。
+- Frontend Payment Buttons：Thank You 页面显示哪些 BEpusdt 交易类型按钮。当前内置 BEpusdt 文档列出的主流币种和网络，默认启用 USDT TRC20、USDT Polygon、USDT ERC20。
 - Payment Expiration：支付过期时间，单位为秒。
-- Visual Payment Options：默认关闭，可多选 USDT、VISA、PayPal、Mastercard。该选项仅用于视觉化展示，无实质支付功能。
+- Visual Payment Options：默认关闭，可勾选 USDT、VISA、PayPal、Mastercard，并可拖动排序；后台怎么排序，前台就怎么显示。该选项仅用于视觉化展示，无实质支付功能。
+- Payment Guide HTML：用于设置前台 USDT 支付教程提示 HTML，留空则 USDT 选中时不显示提示。
 - Automatic Status Polling：是否定时查询待付款订单状态，防止回调失败导致订单不同步。
 - Debug Log：是否记录 WooCommerce 调试日志，敏感字段会脱敏。
 
@@ -106,15 +107,16 @@ WooCommerce > Settings > Payments > BEpusdt USDT
 ## 使用方法
 
 1. 在 BEpusdt 后端完成收款钱包、网络、代币、汇率和收银台配置。
-2. 在 WooCommerce 后台启用 `BEpusdt USDT` 支付方式。
+2. 在 WooCommerce 后台启用 `BEpusdt Crypto` 支付方式。
 3. 填写 BEpusdt API URL 和 API Token / Secret。
-4. 在 `Frontend Chain Buttons` 中选择前台允许用户点击的链按钮。
-5. 如需在结账页展示支付方式图标，在 `Visual Payment Options` 中选择需要显示的视觉选项。
-6. 创建一个测试商品并下单。
-7. 在结账页选择加密货币支付方式并提交订单。
-8. 到达 WooCommerce Thank You 页面后，点击需要使用的链按钮。
-9. 插件创建 BEpusdt 支付订单，并在新页面打开 BEpusdt 收银台。
-10. 用户完成付款后，BEpusdt 通过回调或轮询结果让 WooCommerce 订单变为已支付。
+4. 在 `Frontend Payment Buttons` 中选择前台允许用户点击的 BEpusdt 交易类型按钮。
+5. 如需在结账页展示支付方式图标，在 `Visual Payment Options` 中勾选需要显示的视觉选项，并拖动排序。
+6. 如需显示 USDT 支付教程链接，在 `Payment Guide HTML` 中填写 HTML，例如 `<a href="https://yourdomain.com" target="_blank" rel="noopener noreferrer">USDT支付教程</a>`。
+7. 创建一个测试商品并下单。
+8. 在结账页选择加密货币支付方式并提交订单。
+9. 到达 WooCommerce Thank You 页面后，点击需要使用的链或币种按钮。
+10. 插件创建 BEpusdt 支付订单，并在新页面打开 BEpusdt 收银台。
+11. 用户完成付款后，BEpusdt 通过回调或轮询结果让 WooCommerce 订单变为已支付。
 
 如果你的 BEpusdt 后端需要手动填写回调地址，可以使用：
 
@@ -128,8 +130,9 @@ https://your-site.example/wc-api/bepusdt_wc_notify
 
 结账页视觉支付方式由后台 `Visual Payment Options` 控制，默认不显示。
 
-- USDT：作为主视觉支付方式，默认选中；点击后保持选中，并显示 USDT 支付教学链接。
-- VISA / PayPal / Mastercard：只作为视觉化选项；点击后会提示当前地址无法使用对应支付方式，并自动回到 USDT 提示。
+- USDT：作为主视觉支付方式，默认选中；点击后保持选中。如果后台填写了 `Payment Guide HTML`，则显示自定义教程内容；如果留空，则不显示提示。
+- VISA / PayPal / Mastercard：只作为视觉化选项；点击后会提示当前地址无法使用对应支付方式。如果后台填写了 `Payment Guide HTML`，提示会自动切回教程内容；如果留空，提示会自动关闭。
+- 视觉选项的前台顺序完全跟随后台拖动排序。
 
 视觉支付选项的按钮结构和样式在以下文件中维护：
 
@@ -153,7 +156,7 @@ assets/images/mastercard.svg
 
 1. 显示 WooCommerce 订单编号、订单日期、订单总额、支付方式、交易 ID 等信息。
 2. 在支付卡片底部显示后台启用的链按钮。
-3. 用户点击某条链，例如 TRC20 或 USDT Polygon。
+3. 用户点击某个 BEpusdt 交易类型，例如 USDT TRC20、USDC Polygon 或 ETH。
 4. 插件调用 BEpusdt API 创建支付交易。
 5. 创建成功后，在新页面打开 BEpusdt 收银台。
 
@@ -214,15 +217,22 @@ bepusdt-woocommerce
 
 用于在指定页面输出某个 WooCommerce 订单的支付按钮。
 
-## 扩展更多链或代币
+## 支持的 BEpusdt 交易类型
 
-BEpusdt 后端支持的链和代币比当前插件默认按钮更多。如果需要扩展新的链或代币，通常需要修改：
+当前后台已内置以下 BEpusdt `trade_type`：
 
-- `includes/class-wc-gateway-bepusdt.php` 中的 `trade_type_options()`。
-- `templates/payment-instructions.php` 中链按钮的显示逻辑。
-- 必要时补充前端文案和样式。
+- `usdt.trc20`、`usdc.trc20`、`tron.trx`
+- `usdt.erc20`、`usdc.erc20`、`ethereum.eth`
+- `usdt.polygon`、`usdc.polygon`
+- `usdt.bep20`、`usdc.bep20`、`bsc.bnb`
+- `usdt.aptos`、`usdc.aptos`
+- `usdt.solana`、`usdc.solana`
+- `usdt.xlayer`、`usdc.xlayer`
+- `usdt.arbitrum`、`usdc.arbitrum`
+- `usdc.base`
+- `usdt.plasma`
 
-扩展时需要确保新增的 `trade_type` 与 BEpusdt 后端实际支持的类型一致。
+如果 BEpusdt 后续新增交易类型，需要在 `includes/class-wc-gateway-bepusdt.php` 的 `trade_type_options()` 中补充对应值。
 
 ## 维护注意事项
 

@@ -21,9 +21,9 @@ $enabled_chains  = $this->get_enabled_trade_types();
 
 <section class="bepusdt-wc-payment bepusdt-wc-payment--order-pay" data-bepusdt-payment data-order-id="<?php echo esc_attr( $order_id ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>">
 	<div class="bepusdt-wc-payment__main">
-		<h2 class="bepusdt-wc-payment__title"><?php esc_html_e( 'Choose a USDT Network', 'bepusdt-woocommerce' ); ?></h2>
+		<h2 class="bepusdt-wc-payment__title"><?php esc_html_e( 'Choose a Payment Network', 'bepusdt-woocommerce' ); ?></h2>
 		<p class="bepusdt-wc-payment__text">
-			<?php esc_html_e( 'Your order has been created. Select the network you want to pay with, then you will be redirected to the secure USDT checkout page.', 'bepusdt-woocommerce' ); ?>
+			<?php esc_html_e( 'Your order has been created. Select the network or token you want to pay with, then you will be redirected to the secure cryptocurrency checkout page.', 'bepusdt-woocommerce' ); ?>
 		</p>
 
 		<dl class="bepusdt-wc-payment__details">
@@ -41,7 +41,7 @@ $enabled_chains  = $this->get_enabled_trade_types();
 			</div>
 			<div>
 				<dt><?php esc_html_e( 'Payment Method', 'bepusdt-woocommerce' ); ?></dt>
-				<dd><?php echo esc_html( $order->get_payment_method_title() ? $order->get_payment_method_title() : __( 'USDT Payment', 'bepusdt-woocommerce' ) ); ?></dd>
+				<dd><?php echo esc_html( $order->get_payment_method_title() ? $order->get_payment_method_title() : __( 'Crypto Payment', 'bepusdt-woocommerce' ) ); ?></dd>
 			</div>
 			<?php if ( $trade_id ) : ?>
 				<div>
@@ -53,7 +53,7 @@ $enabled_chains  = $this->get_enabled_trade_types();
 	</div>
 
 	<div class="bepusdt-wc-chain-panel">
-		<p class="bepusdt-wc-chain-panel__title"><?php esc_html_e( 'USDT Network', 'bepusdt-woocommerce' ); ?></p>
+		<p class="bepusdt-wc-chain-panel__title"><?php esc_html_e( 'Payment Network', 'bepusdt-woocommerce' ); ?></p>
 		<div class="bepusdt-wc-chain-grid">
 			<?php foreach ( $enabled_chains as $chain ) : ?>
 				<?php
@@ -74,7 +74,7 @@ $enabled_chains  = $this->get_enabled_trade_types();
 			<?php endforeach; ?>
 		</div>
 		<p class="bepusdt-wc-payment__status" data-bepusdt-status aria-live="polite">
-			<?php esc_html_e( 'After payment, this page will update automatically when USDT confirms the transaction.', 'bepusdt-woocommerce' ); ?>
+			<?php esc_html_e( 'After payment, this page will update automatically when the transaction is confirmed.', 'bepusdt-woocommerce' ); ?>
 		</p>
 	</div>
 </section>

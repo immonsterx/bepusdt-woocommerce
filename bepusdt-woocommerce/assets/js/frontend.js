@@ -14,38 +14,48 @@
 		return notice;
 	}
 
-	function showNotice(container, message) {
+	function hasGuideNotice() {
+		return typeof settings.guideHtml === 'string' && settings.guideHtml.trim() !== '';
+	}
+
+	function hideNotice(container) {
+		var notice = container.querySelector('[data-bepusdt-notice]');
+		if (!notice) {
+			return;
+		}
+
+		window.clearTimeout(notice._bepusdtTimer);
+		notice.textContent = '';
+		notice.hidden = true;
+	}
+
+	function showNotice(container, message, autoClose) {
 		var notice = noticeElement(container);
 		if (!notice) {
 			return;
 		}
 
 		notice.textContent = message;
+
+		if (autoClose) {
+			notice._bepusdtTimer = window.setTimeout(function () {
+				hideNotice(container);
+			}, 3600);
+		}
 	}
 
 	function showGuideNotice(container) {
+		if (!hasGuideNotice()) {
+			hideNotice(container);
+			return;
+		}
+
 		var notice = noticeElement(container);
 		if (!notice) {
 			return;
 		}
 
-		var link = document.createElement('a');
-		link.href = settings.guideUrl || '/usdt-payment-guide-buy-and-withdraw/';
-		link.target = '_blank';
-		link.rel = 'noopener';
-
-		var prefix = document.createElement('span');
-		prefix.textContent = '👉 查看 ';
-
-		var label = document.createElement('span');
-		label.className = 'bepusdt-wc-notice-link-text';
-		label.textContent = (settings.guideLabel || '查看 USDT 支付教學').replace(/^查看\s*/, '');
-
-		link.appendChild(prefix);
-		link.appendChild(label);
-
-		notice.textContent = '';
-		notice.appendChild(link);
+		notice.innerHTML = settings.guideHtml;
 	}
 
 	function disabledMethodMessage(method) {
@@ -59,7 +69,7 @@
 		return template.replace('%s', brand);
 	}
 
-	function restoreGuideNotice(container) {
+	function restoreDefaultNotice(container) {
 		var notice = container.querySelector('[data-bepusdt-notice]');
 		if (!notice) {
 			return;
@@ -68,7 +78,11 @@
 		window.clearTimeout(notice._bepusdtTimer);
 		notice._bepusdtTimer = window.setTimeout(function () {
 			selectMethod(container.querySelector('[data-bepusdt-primary-method]'));
-			showGuideNotice(container);
+			if (hasGuideNotice()) {
+				showGuideNotice(container);
+			} else {
+				hideNotice(container);
+			}
 		}, 3600);
 	}
 
@@ -122,11 +136,13 @@
 			var checkout = disabledMethod.closest('[data-bepusdt-checkout]');
 			if (checkout) {
 				selectMethod(checkout.querySelector('[data-bepusdt-primary-method]'));
-				showNotice(checkout, disabledMethodMessage(disabledMethod));
-				restoreGuideNotice(checkout);
+				showNotice(checkout, disabledMethodMessage(disabledMethod), !hasGuideNotice());
+				if (hasGuideNotice()) {
+					restoreDefaultNotice(checkout);
+				}
 				return;
 			}
-			showNotice(document, disabledMethodMessage(disabledMethod));
+			showNotice(document, disabledMethodMessage(disabledMethod), !hasGuideNotice());
 			return;
 		}
 

@@ -106,6 +106,8 @@ final class BEpusdt_WooCommerce {
 			true
 		);
 
+		$gateway = $this->gateway();
+
 		wp_localize_script(
 			'bepusdt-wc-frontend',
 			'bepusdtWc',
@@ -114,10 +116,7 @@ final class BEpusdt_WooCommerce {
 				'locale'             => BEpusdt_WC_I18n::current_locale(),
 				'unsupportedMessage' => __( 'This payment method is unavailable for the current address. Please choose USDT payment.', 'bepusdt-woocommerce' ),
 				'unsupportedTemplate' => __( 'This address cannot use %s payment. Please choose USDT payment.', 'bepusdt-woocommerce' ),
-				'guideLabel'         => __( 'View USDT payment tutorial', 'bepusdt-woocommerce' ),
-				'guideUrl'           => home_url( '/usdt-payment-guide-buy-and-withdraw/' ),
-				'copiedMessage'      => __( 'Copied.', 'bepusdt-woocommerce' ),
-				'copyFailedMessage'  => __( 'Copy failed. Please copy manually.', 'bepusdt-woocommerce' ),
+				'guideHtml'          => $gateway ? $gateway->get_payment_guide_html() : '',
 				'paidMessage'        => __( 'Payment confirmed. Refreshing order status...', 'bepusdt-woocommerce' ),
 			)
 		);
@@ -199,7 +198,7 @@ final class BEpusdt_WooCommerce {
 	}
 
 	/**
-	 * Create a USDT transaction for the selected chain and redirect to checkout.
+	 * Create a cryptocurrency transaction for the selected trade type and redirect to checkout.
 	 */
 	public function start_payment() {
 		$order_id   = isset( $_GET['order_id'] ) ? absint( wp_unslash( $_GET['order_id'] ) ) : 0;
@@ -221,7 +220,7 @@ final class BEpusdt_WooCommerce {
 		$gateway = $this->gateway();
 
 		if ( ! $gateway || ! $gateway->is_trade_type_enabled( $trade_type ) ) {
-			wc_add_notice( __( 'Selected USDT network is not available.', 'bepusdt-woocommerce' ), 'error' );
+			wc_add_notice( __( 'Selected payment network is not available.', 'bepusdt-woocommerce' ), 'error' );
 			wp_safe_redirect( $order->get_checkout_payment_url( true ) );
 			exit;
 		}
@@ -240,7 +239,7 @@ final class BEpusdt_WooCommerce {
 
 		if ( ! $payment_url || ! $trade_id ) {
 			$api->log( 'Create transaction response missing payment_url or trade_id.', $result, 'error' );
-			wc_add_notice( __( 'Unable to create USDT payment. Please try again.', 'bepusdt-woocommerce' ), 'error' );
+			wc_add_notice( __( 'Unable to create cryptocurrency payment. Please try again.', 'bepusdt-woocommerce' ), 'error' );
 			wp_safe_redirect( $order->get_checkout_payment_url( true ) );
 			exit;
 		}
@@ -251,7 +250,7 @@ final class BEpusdt_WooCommerce {
 		$order->update_meta_data( '_bepusdt_token', isset( $result['token'] ) ? sanitize_text_field( $result['token'] ) : '' );
 		$order->update_meta_data( '_bepusdt_actual_amount', isset( $result['actual_amount'] ) ? wc_format_decimal( $result['actual_amount'], 8 ) : '' );
 		$order->update_meta_data( '_bepusdt_expiration_time', isset( $result['expiration_time'] ) ? sanitize_text_field( $result['expiration_time'] ) : '' );
-		$order->add_order_note( sprintf( __( 'USDT payment started on %s.', 'bepusdt-woocommerce' ), $gateway->get_trade_type_label( $trade_type ) ) );
+		$order->add_order_note( sprintf( __( 'Cryptocurrency payment started on %s.', 'bepusdt-woocommerce' ), $gateway->get_trade_type_label( $trade_type ) ) );
 		$order->save();
 
 		wp_redirect( $payment_url );
@@ -316,10 +315,10 @@ final class BEpusdt_WooCommerce {
 		if ( 2 === $status && ! $order->is_paid() ) {
 			$transaction_id = $payload['block_transaction_id'] ?? $payload['trade_hash'] ?? $payload['trade_id'] ?? '';
 			$order->payment_complete( sanitize_text_field( $transaction_id ) );
-			$order->add_order_note( __( 'USDT payment confirmed.', 'bepusdt-woocommerce' ) );
+			$order->add_order_note( __( 'Cryptocurrency payment confirmed.', 'bepusdt-woocommerce' ) );
 			$api->log( 'Payment confirmed.', $payload, 'info' );
 		} elseif ( 3 === $status && $order->has_status( array( 'pending', 'on-hold' ) ) ) {
-			$order->update_status( 'failed', __( 'USDT payment expired.', 'bepusdt-woocommerce' ) );
+			$order->update_status( 'failed', __( 'Cryptocurrency payment expired.', 'bepusdt-woocommerce' ) );
 			$api->log( 'Payment expired.', $payload, 'warning' );
 		}
 
@@ -336,7 +335,7 @@ final class BEpusdt_WooCommerce {
 		$atts = shortcode_atts(
 			array(
 				'order_id' => 0,
-				'label'    => __( 'Pay with USDT', 'bepusdt-woocommerce' ),
+				'label'    => __( 'Pay with cryptocurrency', 'bepusdt-woocommerce' ),
 			),
 			$atts,
 			'bepusdt_payment_button'
@@ -370,4 +369,3 @@ final class BEpusdt_WooCommerce {
 		return isset( $gateways['bepusdt'] ) && $gateways['bepusdt'] instanceof WC_Gateway_BEpusdt ? $gateways['bepusdt'] : null;
 	}
 }
-

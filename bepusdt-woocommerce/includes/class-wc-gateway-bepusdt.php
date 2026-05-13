@@ -20,14 +20,14 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 		$this->id                 = 'bepusdt';
 		$this->icon               = '';
 		$this->has_fields         = true;
-		$this->method_title       = __( 'BEpusdt USDT', 'bepusdt-woocommerce' );
-		$this->method_description = __( 'Accept USDT payments through a BEpusdt backend.', 'bepusdt-woocommerce' );
+		$this->method_title       = __( 'BEpusdt Crypto', 'bepusdt-woocommerce' );
+		$this->method_description = __( 'Accept cryptocurrency payments through a BEpusdt backend.', 'bepusdt-woocommerce' );
 		$this->supports           = array( 'products' );
 
 		$this->init_form_fields();
 		$this->init_settings();
 
-		$this->title       = $this->get_setting_preserve_empty( 'title', __( 'USDT Payment', 'bepusdt-woocommerce' ) );
+		$this->title       = $this->get_setting_preserve_empty( 'title', __( 'Crypto Payment', 'bepusdt-woocommerce' ) );
 		$this->description = $this->get_setting_preserve_empty( 'description', '' );
 		$this->enabled     = $this->get_option( 'enabled', 'yes' );
 
@@ -44,15 +44,15 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 			'enabled'            => array(
 				'title'   => __( 'Enable/Disable', 'bepusdt-woocommerce' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Enable BEpusdt USDT payment', 'bepusdt-woocommerce' ),
+				'label'   => __( 'Enable BEpusdt cryptocurrency payment', 'bepusdt-woocommerce' ),
 				'default' => 'yes',
 			),
 			'title'              => array(
 				'title'       => __( 'Title', 'bepusdt-woocommerce' ),
 				'type'        => 'text',
 				'description' => __( 'Shown to customers during checkout. Leave blank to hide it on the frontend.', 'bepusdt-woocommerce' ),
-				'default'     => __( 'USDT Payment', 'bepusdt-woocommerce' ),
-				'placeholder' => __( 'USDT Payment', 'bepusdt-woocommerce' ),
+				'default'     => __( 'Crypto Payment', 'bepusdt-woocommerce' ),
+				'placeholder' => __( 'Crypto Payment', 'bepusdt-woocommerce' ),
 				'desc_tip'    => true,
 			),
 			'description'        => array(
@@ -78,11 +78,11 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 				'desc_tip'    => true,
 			),
 			'enabled_trade_types' => array(
-				'title'       => __( 'Frontend Chain Buttons', 'bepusdt-woocommerce' ),
+				'title'       => __( 'Frontend Payment Buttons', 'bepusdt-woocommerce' ),
 				'type'        => 'multiselect',
 				'default'     => array( 'usdt.trc20', 'usdt.polygon', 'usdt.erc20' ),
 				'options'     => $this->trade_type_options(),
-				'description' => __( 'Choose which USDT chain buttons customers can click on the payment page.', 'bepusdt-woocommerce' ),
+				'description' => __( 'Choose which BEpusdt trade types customers can click on the payment page.', 'bepusdt-woocommerce' ),
 				'desc_tip'    => true,
 				'class'       => 'wc-enhanced-select',
 			),
@@ -99,12 +99,22 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 			),
 			'visual_methods'     => array(
 				'title'       => __( 'Visual Payment Options', 'bepusdt-woocommerce' ),
-				'type'        => 'multiselect',
+				'type'        => 'visual_methods',
 				'default'     => array(),
 				'options'     => $this->visual_method_options(),
-				'description' => __( 'Visual payment options only; no real payment functionality.', 'bepusdt-woocommerce' ),
+				'description' => __( 'Drag to reorder. Checked options are shown on the frontend in this order. Visual payment options only; no real payment functionality.', 'bepusdt-woocommerce' ),
 				'desc_tip'    => true,
-				'class'       => 'wc-enhanced-select',
+			),
+			'payment_guide_html' => array(
+				'title'       => __( 'Payment Guide HTML', 'bepusdt-woocommerce' ),
+				'type'        => 'textarea',
+				'default'     => '',
+				'description' => sprintf(
+					/* translators: %s: example HTML. */
+					__( 'Used to guide customers to a payment tutorial. Leave blank to hide it. Example: %s', 'bepusdt-woocommerce' ),
+					'<code>&lt;a href=&quot;https://yourdomain.com&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;USDT payment tutorial&lt;/a&gt;</code>'
+				),
+				'css'         => 'min-height: 100px;',
 			),
 			'polling_enabled'    => array(
 				'title'   => __( 'Automatic Status Polling', 'bepusdt-woocommerce' ),
@@ -134,23 +144,19 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 		<div class="bepusdt-wc-checkout" data-bepusdt-checkout>
 			<?php $visual_methods = $this->get_enabled_visual_methods(); ?>
 			<?php if ( $visual_methods ) : ?>
-				<div class="bepusdt-wc-method-grid" role="group" aria-label="<?php esc_attr_e( 'Payment methods', 'bepusdt-woocommerce' ); ?>">
-					<?php if ( in_array( 'usdt', $visual_methods, true ) ) : ?>
-						<button type="button" class="bepusdt-wc-method bepusdt-wc-method--image bepusdt-wc-method--active" data-bepusdt-primary-method aria-label="<?php esc_attr_e( 'USDT', 'bepusdt-woocommerce' ); ?>" aria-pressed="true">
-							<span class="bepusdt-wc-method-card">
-								<img src="<?php echo esc_url( BEPUSDT_WC_URL . 'assets/images/usdt.svg' ); ?>" alt="" loading="lazy" />
-							</span>
-						</button>
-					<?php endif; ?>
-					<?php foreach ( $this->other_methods() as $method ) : ?>
-						<?php if ( in_array( $method['id'], $visual_methods, true ) ) : ?>
-							<button type="button" class="bepusdt-wc-method bepusdt-wc-method--image" data-bepusdt-disabled-method data-bepusdt-method-name="<?php echo esc_attr( $method['brand'] ); ?>" aria-disabled="true" aria-label="<?php echo esc_attr( $method['brand'] ); ?>" aria-pressed="false">
+				<div class="bepusdt-wc-visual-options" role="group" aria-label="<?php esc_attr_e( 'Visual payment options', 'bepusdt-woocommerce' ); ?>">
+					<div class="bepusdt-wc-method-grid">
+					<?php foreach ( $visual_methods as $method_id ) : ?>
+						<?php $method = $this->get_visual_method_data( $method_id ); ?>
+						<?php if ( $method ) : ?>
+							<button type="button" class="bepusdt-wc-method bepusdt-wc-method--image<?php echo 'usdt' === $method_id ? ' bepusdt-wc-method--active' : ''; ?>" <?php echo 'usdt' === $method_id ? 'data-bepusdt-primary-method' : 'data-bepusdt-disabled-method data-bepusdt-method-name="' . esc_attr( $method['brand'] ) . '" aria-disabled="true"'; ?> aria-label="<?php echo esc_attr( $method['brand'] ); ?>" aria-pressed="<?php echo 'usdt' === $method_id ? 'true' : 'false'; ?>">
 								<span class="bepusdt-wc-method-card">
 									<img src="<?php echo esc_url( $method['image'] ); ?>" alt="" loading="lazy" />
 								</span>
 							</button>
 						<?php endif; ?>
 					<?php endforeach; ?>
+					</div>
 				</div>
 				<div class="bepusdt-wc-notice" data-bepusdt-notice hidden></div>
 			<?php endif; ?>
@@ -172,7 +178,7 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 			return array( 'result' => 'failure' );
 		}
 
-		$order->update_status( 'pending', __( 'Awaiting customer to choose a USDT network.', 'bepusdt-woocommerce' ) );
+		$order->update_status( 'pending', __( 'Awaiting customer to choose a payment network.', 'bepusdt-woocommerce' ) );
 		$order->save();
 
 		wc_reduce_stock_levels( $order_id );
@@ -297,6 +303,137 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Render a sortable checkbox list for visual payment options.
+	 *
+	 * @param string $key Field key.
+	 * @param array  $data Field data.
+	 * @return string
+	 */
+	public function generate_visual_methods_html( $key, $data ) {
+		$field_key   = $this->get_field_key( $key );
+		$defaults    = array(
+			'title'       => '',
+			'disabled'    => false,
+			'desc_tip'    => false,
+			'description' => '',
+			'options'     => array(),
+		);
+		$data        = wp_parse_args( $data, $defaults );
+		$description = $this->get_description_html( $data );
+		$selected    = $this->get_option( $key, array() );
+
+		if ( ! is_array( $selected ) ) {
+			$selected = array_filter( array_map( 'trim', explode( ',', (string) $selected ) ) );
+		}
+
+		$options = $this->ordered_visual_method_options( $selected );
+		$list_id = $field_key . '_sortable';
+
+		ob_start();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label><?php echo wp_kses_post( $data['title'] ); ?> <?php echo wp_kses_post( $this->get_tooltip_html( $data ) ); ?></label>
+			</th>
+			<td class="forminp">
+				<fieldset>
+					<ul id="<?php echo esc_attr( $list_id ); ?>" class="bepusdt-admin-sortable-methods">
+						<?php foreach ( $options as $method_id => $label ) : ?>
+							<li class="bepusdt-admin-sortable-method" draggable="true">
+								<span class="bepusdt-admin-sortable-method__handle" aria-hidden="true">↕</span>
+								<label>
+									<input type="checkbox" name="<?php echo esc_attr( $field_key ); ?>[]" value="<?php echo esc_attr( $method_id ); ?>" <?php checked( in_array( $method_id, $selected, true ) ); ?> <?php disabled( $data['disabled'], true ); ?> />
+									<?php echo esc_html( $label ); ?>
+								</label>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+					<?php echo wp_kses_post( $description ); ?>
+				</fieldset>
+				<style>
+					.bepusdt-admin-sortable-methods {
+						margin: 0 0 8px;
+						max-width: 420px;
+					}
+					.bepusdt-admin-sortable-method {
+						align-items: center;
+						background: #fff;
+						border: 1px solid #dcdcde;
+						border-radius: 6px;
+						cursor: grab;
+						display: flex;
+						gap: 8px;
+						margin: 0 0 8px;
+						padding: 9px 10px;
+					}
+					.bepusdt-admin-sortable-method.is-dragging {
+						opacity: 0.55;
+					}
+					.bepusdt-admin-sortable-method__handle {
+						color: #646970;
+						font-size: 15px;
+						line-height: 1;
+					}
+				</style>
+				<script>
+					(function () {
+						var list = document.getElementById(<?php echo wp_json_encode( $list_id ); ?>);
+						if (!list || list.dataset.bepusdtSortableReady) {
+							return;
+						}
+
+						list.dataset.bepusdtSortableReady = '1';
+
+						function itemAfterPointer(y) {
+							var items = [].slice.call(list.querySelectorAll('.bepusdt-admin-sortable-method:not(.is-dragging)'));
+							return items.reduce(function (closest, child) {
+								var box = child.getBoundingClientRect();
+								var offset = y - box.top - box.height / 2;
+								if (offset < 0 && offset > closest.offset) {
+									return { offset: offset, element: child };
+								}
+								return closest;
+							}, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+						}
+
+						list.addEventListener('dragstart', function (event) {
+							var item = event.target.closest('.bepusdt-admin-sortable-method');
+							if (!item) {
+								return;
+							}
+							item.classList.add('is-dragging');
+							event.dataTransfer.effectAllowed = 'move';
+						});
+
+						list.addEventListener('dragend', function (event) {
+							var item = event.target.closest('.bepusdt-admin-sortable-method');
+							if (item) {
+								item.classList.remove('is-dragging');
+							}
+						});
+
+						list.addEventListener('dragover', function (event) {
+							event.preventDefault();
+							var dragging = list.querySelector('.is-dragging');
+							if (!dragging) {
+								return;
+							}
+							var after = itemAfterPointer(event.clientY);
+							if (after) {
+								list.insertBefore(dragging, after);
+							} else {
+								list.appendChild(dragging);
+							}
+						});
+					}());
+				</script>
+			</td>
+		</tr>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
 	 * Return decrypted API token.
 	 *
 	 * @return string
@@ -345,15 +482,53 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Validate the optional front-end guide HTML.
+	 *
+	 * @param string $key Field key.
+	 * @param string $value Submitted value.
+	 * @return string
+	 */
+	public function validate_payment_guide_html_field( $key, $value ) {
+		return trim( wp_kses_post( wp_unslash( (string) $value ) ) );
+	}
+
+	/**
+	 * Return optional front-end guide HTML.
+	 *
+	 * @return string
+	 */
+	public function get_payment_guide_html() {
+		return wp_kses_post( $this->get_option( 'payment_guide_html', '' ) );
+	}
+
+	/**
 	 * Get available trade type labels.
 	 *
 	 * @return array
 	 */
 	public function trade_type_options() {
 		return array(
-			'usdt.trc20'   => __( 'USDT TRC20', 'bepusdt-woocommerce' ),
-			'usdt.polygon' => __( 'USDT Polygon', 'bepusdt-woocommerce' ),
-			'usdt.erc20'   => __( 'USDT ERC20', 'bepusdt-woocommerce' ),
+			'usdt.trc20'     => __( 'USDT TRC20 (Tron)', 'bepusdt-woocommerce' ),
+			'usdc.trc20'     => __( 'USDC TRC20 (Tron)', 'bepusdt-woocommerce' ),
+			'tron.trx'       => __( 'TRX (Tron)', 'bepusdt-woocommerce' ),
+			'usdt.erc20'     => __( 'USDT ERC20 (Ethereum)', 'bepusdt-woocommerce' ),
+			'usdc.erc20'     => __( 'USDC ERC20 (Ethereum)', 'bepusdt-woocommerce' ),
+			'ethereum.eth'   => __( 'ETH (Ethereum)', 'bepusdt-woocommerce' ),
+			'usdt.polygon'   => __( 'USDT Polygon', 'bepusdt-woocommerce' ),
+			'usdc.polygon'   => __( 'USDC Polygon', 'bepusdt-woocommerce' ),
+			'usdt.bep20'     => __( 'USDT BEP20 (BSC)', 'bepusdt-woocommerce' ),
+			'usdc.bep20'     => __( 'USDC BEP20 (BSC)', 'bepusdt-woocommerce' ),
+			'bsc.bnb'        => __( 'BNB (BSC)', 'bepusdt-woocommerce' ),
+			'usdt.aptos'     => __( 'USDT Aptos', 'bepusdt-woocommerce' ),
+			'usdc.aptos'     => __( 'USDC Aptos', 'bepusdt-woocommerce' ),
+			'usdt.solana'    => __( 'USDT Solana', 'bepusdt-woocommerce' ),
+			'usdc.solana'    => __( 'USDC Solana', 'bepusdt-woocommerce' ),
+			'usdt.xlayer'    => __( 'USDT X-Layer', 'bepusdt-woocommerce' ),
+			'usdc.xlayer'    => __( 'USDC X-Layer', 'bepusdt-woocommerce' ),
+			'usdt.arbitrum'  => __( 'USDT Arbitrum-One', 'bepusdt-woocommerce' ),
+			'usdc.arbitrum'  => __( 'USDC Arbitrum-One', 'bepusdt-woocommerce' ),
+			'usdc.base'      => __( 'USDC Base', 'bepusdt-woocommerce' ),
+			'usdt.plasma'    => __( 'USDT Plasma', 'bepusdt-woocommerce' ),
 		);
 	}
 
@@ -425,6 +600,11 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	private function other_methods() {
 		return array(
 			array(
+				'id'    => 'usdt',
+				'brand' => 'USDT',
+				'image' => BEPUSDT_WC_URL . 'assets/images/usdt.svg',
+			),
+			array(
 				'id'    => 'visa',
 				'brand' => 'VISA',
 				'image' => BEPUSDT_WC_URL . 'assets/images/visa.svg',
@@ -454,6 +634,47 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 			'paypal'     => __( 'PayPal', 'bepusdt-woocommerce' ),
 			'mastercard' => __( 'Mastercard', 'bepusdt-woocommerce' ),
 		);
+	}
+
+	/**
+	 * Get visual method data by ID.
+	 *
+	 * @param string $method_id Visual method ID.
+	 * @return array|null
+	 */
+	private function get_visual_method_data( $method_id ) {
+		foreach ( $this->other_methods() as $method ) {
+			if ( $method_id === $method['id'] ) {
+				return $method;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Return visual method options in saved order, with new options appended.
+	 *
+	 * @param array $saved_order Saved method IDs.
+	 * @return array
+	 */
+	private function ordered_visual_method_options( $saved_order ) {
+		$all     = $this->visual_method_options();
+		$ordered = array();
+
+		foreach ( $saved_order as $method_id ) {
+			if ( isset( $all[ $method_id ] ) ) {
+				$ordered[ $method_id ] = $all[ $method_id ];
+			}
+		}
+
+		foreach ( $all as $method_id => $label ) {
+			if ( ! isset( $ordered[ $method_id ] ) ) {
+				$ordered[ $method_id ] = $label;
+			}
+		}
+
+		return $ordered;
 	}
 
 	/**

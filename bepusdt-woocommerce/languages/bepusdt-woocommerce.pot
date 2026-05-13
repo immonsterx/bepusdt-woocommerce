@@ -1,14 +1,23 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BEpusdt for WooCommerce 1.2.0\n"
+"Project-Id-Version: BEpusdt for WooCommerce 1.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 00:00+0000\n"
+"POT-Creation-Date: 2026-05-13 00:00+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Text-Domain: bepusdt-woocommerce\n"
 
-msgid "USDT Payment"
+msgid "BEpusdt Crypto"
+msgstr ""
+
+msgid "Accept cryptocurrency payments through a BEpusdt backend."
+msgstr ""
+
+msgid "Crypto Payment"
+msgstr ""
+
+msgid "Enable BEpusdt cryptocurrency payment"
 msgstr ""
 
 msgid "Shown to customers during checkout. Leave blank to hide it on the frontend."
@@ -20,22 +29,34 @@ msgstr ""
 msgid "Optional checkout description."
 msgstr ""
 
-msgid "Visual payment options only; no real payment functionality."
+msgid "Frontend Payment Buttons"
 msgstr ""
 
-msgid "Available"
+msgid "Choose which BEpusdt trade types customers can click on the payment page."
 msgstr ""
 
-msgid "Unavailable"
+msgid "Visual Payment Options"
 msgstr ""
 
-msgid "Bank Card"
+msgid "Visual payment options"
 msgstr ""
 
-msgid "Choose a USDT Network"
+msgid "Drag to reorder. Checked options are shown on the frontend in this order. Visual payment options only; no real payment functionality."
 msgstr ""
 
-msgid "Your order has been created. Select the network you want to pay with, then you will be redirected to the secure USDT checkout page."
+msgid "Payment Guide HTML"
+msgstr ""
+
+msgid "Used to guide customers to a payment tutorial. Leave blank to hide it. Example: %s"
+msgstr ""
+
+msgid "A token is saved and hidden. Replace the stars only if you want to update it."
+msgstr ""
+
+msgid "Choose a Payment Network"
+msgstr ""
+
+msgid "Your order has been created. Select the network or token you want to pay with, then you will be redirected to the secure cryptocurrency checkout page."
 msgstr ""
 
 msgid "Order Total"
@@ -53,10 +74,10 @@ msgstr ""
 msgid "Trade ID"
 msgstr ""
 
-msgid "USDT Network"
+msgid "Payment Network"
 msgstr ""
 
-msgid "After payment, this page will update automatically when USDT confirms the transaction."
+msgid "After payment, this page will update automatically when the transaction is confirmed."
 msgstr ""
 
 msgid "This payment method is unavailable for the current address. Please choose USDT payment."
@@ -65,26 +86,92 @@ msgstr ""
 msgid "This address cannot use %s payment. Please choose USDT payment."
 msgstr ""
 
-msgid "View USDT payment tutorial"
-msgstr ""
-
 msgid "Payment confirmed. Refreshing order status..."
 msgstr ""
 
 msgid "Invalid payment request."
 msgstr ""
 
-msgid "Selected USDT network is not available."
+msgid "Selected payment network is not available."
 msgstr ""
 
-msgid "Unable to create USDT payment. Please try again."
+msgid "Unable to create cryptocurrency payment. Please try again."
 msgstr ""
 
-msgid "USDT payment started on %s."
+msgid "Cryptocurrency payment started on %s."
 msgstr ""
 
-msgid "Awaiting customer to choose a USDT network."
+msgid "Cryptocurrency payment confirmed."
 msgstr ""
 
-msgid "A token is saved and hidden. Replace the stars only if you want to update it."
+msgid "Cryptocurrency payment expired."
+msgstr ""
+
+msgid "Awaiting customer to choose a payment network."
+msgstr ""
+
+msgid "Pay with cryptocurrency"
+msgstr ""
+
+msgid "USDT TRC20 (Tron)"
+msgstr ""
+
+msgid "USDC TRC20 (Tron)"
+msgstr ""
+
+msgid "TRX (Tron)"
+msgstr ""
+
+msgid "USDT ERC20 (Ethereum)"
+msgstr ""
+
+msgid "USDC ERC20 (Ethereum)"
+msgstr ""
+
+msgid "ETH (Ethereum)"
+msgstr ""
+
+msgid "USDT Polygon"
+msgstr ""
+
+msgid "USDC Polygon"
+msgstr ""
+
+msgid "USDT BEP20 (BSC)"
+msgstr ""
+
+msgid "USDC BEP20 (BSC)"
+msgstr ""
+
+msgid "BNB (BSC)"
+msgstr ""
+
+msgid "USDT Aptos"
+msgstr ""
+
+msgid "USDC Aptos"
+msgstr ""
+
+msgid "USDT Solana"
+msgstr ""
+
+msgid "USDC Solana"
+msgstr ""
+
+msgid "USDT X-Layer"
+msgstr ""
+
+msgid "USDC X-Layer"
+msgstr ""
+
+msgid "USDT Arbitrum-One"
+msgstr ""
+
+msgid "USDC Arbitrum-One"
+msgstr ""
+
+msgid "USDC Base"
+msgstr ""
+
+msgid "USDT Plasma"
 msgstr ""

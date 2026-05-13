@@ -5,11 +5,25 @@
 	width: 100%;
 }
 
+.bepusdt-wc-checkout {
+	clear: both;
+	display: block;
+	flex-basis: 100%;
+	margin-top: 12px;
+}
+
+.bepusdt-wc-visual-options {
+	clear: both;
+	display: block;
+	width: 100%;
+}
+
 .bepusdt-wc-method-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
 	gap: 12px;
-	margin: 14px 0 10px;
+	margin: 0 0 10px;
+	width: 100%;
 }
 
 .bepusdt-wc-checkout .bepusdt-wc-method-grid button.bepusdt-wc-method {
