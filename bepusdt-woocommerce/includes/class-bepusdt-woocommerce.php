@@ -220,18 +220,14 @@ final class BEpusdt_WooCommerce {
 		$gateway = $this->gateway();
 
 		if ( ! $gateway || ! $gateway->is_trade_type_enabled( $trade_type ) ) {
-			wc_add_notice( __( 'Selected payment network is not available.', 'bepusdt-woocommerce' ), 'error' );
-			wp_safe_redirect( $order->get_checkout_payment_url( true ) );
-			exit;
+			$this->redirect_with_payment_error( $order, __( 'Selected payment network is not available.', 'bepusdt-woocommerce' ) );
 		}
 
 		$api    = new BEpusdt_WC_API( $gateway );
 		$result = $api->create_transaction( $order, $trade_type );
 
 		if ( is_wp_error( $result ) ) {
-			wc_add_notice( $result->get_error_message(), 'error' );
-			wp_safe_redirect( $order->get_checkout_payment_url( true ) );
-			exit;
+			$this->redirect_with_payment_error( $order, $result->get_error_message() );
 		}
 
 		$payment_url = isset( $result['payment_url'] ) ? esc_url_raw( $result['payment_url'] ) : '';
@@ -239,9 +235,7 @@ final class BEpusdt_WooCommerce {
 
 		if ( ! $payment_url || ! $trade_id ) {
 			$api->log( 'Create transaction response missing payment_url or trade_id.', $result, 'error' );
-			wc_add_notice( __( 'Unable to create cryptocurrency payment. Please try again.', 'bepusdt-woocommerce' ), 'error' );
-			wp_safe_redirect( $order->get_checkout_payment_url( true ) );
-			exit;
+			$this->redirect_with_payment_error( $order, __( 'Unable to create cryptocurrency payment. Please try again.', 'bepusdt-woocommerce' ) );
 		}
 
 		$order->update_meta_data( '_bepusdt_trade_type', $trade_type );
@@ -254,6 +248,26 @@ final class BEpusdt_WooCommerce {
 		$order->save();
 
 		wp_redirect( $payment_url );
+		exit;
+	}
+
+	/**
+	 * Store a payment error and redirect back to the WooCommerce payment page.
+	 *
+	 * @param WC_Order $order Order.
+	 * @param string   $message Error message.
+	 */
+	private function redirect_with_payment_error( $order, $message ) {
+		$message = wp_strip_all_tags( (string) $message );
+
+		$order->update_meta_data( '_bepusdt_payment_error', $message );
+		$order->save();
+
+		if ( function_exists( 'wc_add_notice' ) ) {
+			wc_add_notice( $message, 'error' );
+		}
+
+		wp_safe_redirect( $order->get_checkout_payment_url( true ) );
 		exit;
 	}
 

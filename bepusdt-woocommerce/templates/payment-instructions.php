@@ -14,14 +14,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $order_id        = $order->get_id();
 $trade_id        = $order->get_meta( '_bepusdt_trade_id' );
+$payment_error   = $order->get_meta( '_bepusdt_payment_error' );
 $nonce           = wp_create_nonce( 'bepusdt_wc_check_order_' . $order_id );
 $start_nonce     = wp_create_nonce( 'bepusdt_wc_start_payment_' . $order_id );
 $enabled_chains  = $this->get_enabled_trade_types();
+
+if ( $payment_error ) {
+	$order->delete_meta_data( '_bepusdt_payment_error' );
+	$order->save();
+}
 ?>
 
 <section class="bepusdt-wc-payment bepusdt-wc-payment--order-pay" data-bepusdt-payment data-order-id="<?php echo esc_attr( $order_id ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>">
 	<div class="bepusdt-wc-payment__main">
 		<h2 class="bepusdt-wc-payment__title"><?php esc_html_e( 'Choose a Payment Network', 'bepusdt-woocommerce' ); ?></h2>
+		<?php if ( $payment_error ) : ?>
+			<div class="bepusdt-wc-payment__error" role="alert">
+				<?php echo esc_html( $payment_error ); ?>
+			</div>
+		<?php endif; ?>
 		<p class="bepusdt-wc-payment__text">
 			<?php esc_html_e( 'Your order has been created. Select the network or token you want to pay with, then you will be redirected to the secure cryptocurrency checkout page.', 'bepusdt-woocommerce' ); ?>
 		</p>

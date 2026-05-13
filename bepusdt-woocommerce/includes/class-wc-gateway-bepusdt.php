@@ -145,18 +145,31 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 			<?php $visual_methods = $this->get_enabled_visual_methods(); ?>
 			<?php if ( $visual_methods ) : ?>
 				<div class="bepusdt-wc-visual-options" role="group" aria-label="<?php esc_attr_e( 'Visual payment options', 'bepusdt-woocommerce' ); ?>">
-					<div class="bepusdt-wc-method-grid">
-					<?php foreach ( $visual_methods as $method_id ) : ?>
-						<?php $method = $this->get_visual_method_data( $method_id ); ?>
-						<?php if ( $method ) : ?>
-							<button type="button" class="bepusdt-wc-method bepusdt-wc-method--image<?php echo 'usdt' === $method_id ? ' bepusdt-wc-method--active' : ''; ?>" <?php echo 'usdt' === $method_id ? 'data-bepusdt-primary-method' : 'data-bepusdt-disabled-method data-bepusdt-method-name="' . esc_attr( $method['brand'] ) . '" aria-disabled="true"'; ?> aria-label="<?php echo esc_attr( $method['brand'] ); ?>" aria-pressed="<?php echo 'usdt' === $method_id ? 'true' : 'false'; ?>">
+					<?php if ( in_array( 'usdt', $visual_methods, true ) ) : ?>
+						<div class="bepusdt-wc-method-grid bepusdt-wc-method-grid--crypto">
+							<?php $method = $this->get_visual_method_data( 'usdt' ); ?>
+							<button type="button" class="bepusdt-wc-method bepusdt-wc-method--image bepusdt-wc-method--active" data-bepusdt-primary-method aria-label="<?php echo esc_attr( $method['brand'] ); ?>" aria-pressed="true">
 								<span class="bepusdt-wc-method-card">
 									<img src="<?php echo esc_url( $method['image'] ); ?>" alt="" loading="lazy" />
 								</span>
 							</button>
-						<?php endif; ?>
-					<?php endforeach; ?>
-					</div>
+						</div>
+					<?php endif; ?>
+					<?php $alternative_methods = array_values( array_diff( $visual_methods, array( 'usdt' ) ) ); ?>
+					<?php if ( $alternative_methods ) : ?>
+						<div class="bepusdt-wc-method-grid bepusdt-wc-method-grid--alternatives">
+							<?php foreach ( $alternative_methods as $method_id ) : ?>
+								<?php $method = $this->get_visual_method_data( $method_id ); ?>
+								<?php if ( $method ) : ?>
+									<button type="button" class="bepusdt-wc-method bepusdt-wc-method--image" data-bepusdt-disabled-method data-bepusdt-method-name="<?php echo esc_attr( $method['brand'] ); ?>" aria-disabled="true" aria-label="<?php echo esc_attr( $method['brand'] ); ?>" aria-pressed="false">
+										<span class="bepusdt-wc-method-card">
+											<img src="<?php echo esc_url( $method['image'] ); ?>" alt="" loading="lazy" />
+										</span>
+									</button>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
 				</div>
 				<div class="bepusdt-wc-notice" data-bepusdt-notice hidden></div>
 			<?php endif; ?>

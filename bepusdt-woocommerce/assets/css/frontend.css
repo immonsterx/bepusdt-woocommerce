@@ -26,6 +26,15 @@
 	width: 100%;
 }
 
+.bepusdt-wc-method-grid--crypto {
+	border-bottom: 1px solid #edf0f4;
+	padding-bottom: 12px;
+}
+
+.bepusdt-wc-method-grid--alternatives {
+	margin-top: 12px;
+}
+
 .bepusdt-wc-checkout .bepusdt-wc-method-grid button.bepusdt-wc-method {
 	appearance: none;
 	align-items: center;
@@ -183,6 +192,17 @@
 	font-size: 14px;
 	line-height: 1.6;
 	margin: 0;
+}
+
+.bepusdt-wc-payment__error {
+	background: #fff1f2;
+	border: 1px solid #fecdd3;
+	border-radius: 8px;
+	color: #9f1239;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.5;
+	padding: 11px 12px;
 }
 
 .bepusdt-wc-payment__details {

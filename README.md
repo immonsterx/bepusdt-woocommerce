@@ -2,7 +2,7 @@
 
 BEpusdt for WooCommerce 是一个 WordPress + WooCommerce 加密货币收款插件，用于把 WooCommerce 订单接入 BEpusdt 后端收银台。插件负责在 WooCommerce 中注册支付网关、生成支付请求、展示前端支付入口，并通过 BEpusdt 回调或轮询同步订单支付状态。
 
-插件当前版本：`1.2.2`
+插件当前版本：`1.2.3`
 
 ## BEpusdt 是什么
 
@@ -132,7 +132,8 @@ https://your-site.example/wc-api/bepusdt_wc_notify
 
 - USDT：作为主视觉支付方式，默认选中；点击后保持选中。如果后台填写了 `Payment Guide HTML`，则显示自定义教程内容；如果留空，则不显示提示。
 - VISA / PayPal / Mastercard：只作为视觉化选项；点击后会提示当前地址无法使用对应支付方式。如果后台填写了 `Payment Guide HTML`，提示会自动切回教程内容；如果留空，提示会自动关闭。
-- 视觉选项的前台顺序完全跟随后台拖动排序。
+- USDT/加密货币视觉按钮会独立显示一行，VISA / PayPal / Mastercard 会在下一行独立显示，避免和真实加密货币支付入口混在一起。
+- 视觉选项的后台排序会用于同一类别内的前台显示顺序。
 
 视觉支付选项的按钮结构和样式在以下文件中维护：
 
@@ -159,6 +160,8 @@ assets/images/mastercard.svg
 3. 用户点击某个 BEpusdt 交易类型，例如 USDT TRC20、USDC Polygon 或 ETH。
 4. 插件调用 BEpusdt API 创建支付交易。
 5. 创建成功后，在新页面打开 BEpusdt 收银台。
+
+如果 BEpusdt 后端没有配置某个交易类型的钱包地址，BEpusdt 会返回创建失败信息。插件会把该错误显示回订单支付页面，不会让 WordPress 产生致命错误。
 
 支付卡片模板文件：
 
