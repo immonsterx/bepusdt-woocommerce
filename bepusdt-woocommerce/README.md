@@ -2,7 +2,7 @@
 
 这是一个面向 WooCommerce 的 USDT 支付网关插件，用于把 WooCommerce 订单接入 BEpusdt 后端收银台。插件会在 WooCommerce 结账页提供 USDT 支付方式，并在订单提交后的 Thank You 页面显示 USDT 网络选择卡片。用户选择可用链后，插件会创建 BEpusdt 支付订单并跳转到 BEpusdt 收银台完成付款。
 
-插件当前版本：`1.1.8`
+插件当前版本：`1.1.9`
 
 ## 项目作用
 
@@ -11,10 +11,9 @@
 它负责完成以下工作：
 
 - 在 WooCommerce 后台注册一个 USDT 支付网关。
-- 在 WooCommerce 结账页显示 USDT、Visa、PayPal、Mastercard 等视觉支付选项。
-- 默认选中 USDT 支付方式。
-- Visa、PayPal、Mastercard 只作为视觉选项，不可真正选择；点击时按品牌提示，例如：`當前地址無法使用 VISA 支付，請選擇 USDT 支付。`
-- USDT 默认选中时，提示框显示 `👉 查看 USDT 支付教學` 链接，链接地址为 `/usdt-payment-guide-buy-and-withdraw/`，点击后新窗口打开。
+- WooCommerce 后台可选择是否显示 USDT、VISA、PayPal、Mastercard 等视觉支付选项。
+- 如果显示 USDT 视觉选项，USDT 默认选中，并显示 `👉 查看 USDT 支付教學` 链接，链接地址为 `/usdt-payment-guide-buy-and-withdraw/`，点击后新窗口打开。
+- VISA、PayPal、Mastercard 只作为视觉选项，不可真正选择；点击时按品牌提示，例如：`當前地址無法使用 VISA 支付，請選擇 USDT 支付。`
 - 订单提交成功后，在 WooCommerce Thank You 页面插入 USDT 支付卡片。
 - 在支付卡片中显示订单信息和可用 USDT 网络按钮。
 - 用户点击 USDT 网络后，插件向 BEpusdt 后端创建支付订单。
@@ -130,12 +129,11 @@ WooCommerce > Settings > Payments > BEpusdt USDT
 - Title：前台支付方式标题，留空则前台不显示标题。
 - Description：前台支付方式说明，留空则前台不显示说明。
 - BEpusdt API URL：BEpusdt 后端地址。
-- API Token / Secret：BEpusdt API 密钥，保存后后台用星号隐藏。
-- Default Payment Currency：发送给 BEpusdt 的币种，默认使用 WooCommerce 货币。
-- USDT Network：默认 USDT 网络。
+- API Token / Secret：BEpusdt API 密钥，保存后后台按令牌字符数量显示星号。
+- Payment Currency：不提供独立设置，插件始终使用 WooCommerce 当前货币发送给 BEpusdt。
 - Frontend Chain Buttons：Thank You 页面可显示的 USDT 网络按钮。
 - Payment Expiration：支付过期时间，单位秒。
-- Visual Payment Options：是否显示 USDT、Visa、PayPal、Mastercard 视觉选项。
+- Visual Payment Options：默认关闭；可多选 USDT、VISA、PayPal、Mastercard，选择什么前台就显示什么。该项仅为视觉化选项，无实质支付功能。
 - Automatic Status Polling：是否定时查询待付款 USDT 订单状态。
 - Debug Log：是否记录 WooCommerce 调试日志。
 

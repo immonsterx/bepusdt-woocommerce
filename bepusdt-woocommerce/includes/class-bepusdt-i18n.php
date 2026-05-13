@@ -135,6 +135,10 @@ final class BEpusdt_WC_I18n {
 	private static function zh_cn() {
 		return array(
 			'USDT Payment' => 'USDT ' . self::u( '\u652f\u4ed8' ),
+			'Shown to customers during checkout. Leave blank to hide it on the frontend.' => self::u( '\u5728\u7ed3\u8d26\u65f6\u663e\u793a\u7ed9\u5ba2\u6237\u3002\u7559\u7a7a\u5219\u524d\u53f0\u4e0d\u663e\u793a\u3002' ),
+			'Shown under the payment method on checkout. Leave blank to hide it on the frontend.' => self::u( '\u5728\u7ed3\u8d26\u652f\u4ed8\u65b9\u5f0f\u4e0b\u65b9\u663e\u793a\u3002\u7559\u7a7a\u5219\u524d\u53f0\u4e0d\u663e\u793a\u3002' ),
+			'Optional checkout description.' => self::u( '\u53ef\u9009\u7684\u7ed3\u8d26\u8bf4\u660e\u3002' ),
+			'Visual payment options only; no real payment functionality.' => self::u( '\u8996\u89ba\u5316\u9078\u9805\uff0c\u65e0\u5b9e\u8d28\u529f\u80fd\u3002' ),
 			'Available' => self::u( '\u53ef\u7528' ),
 			'Unavailable' => self::u( '\u4e0d\u53ef\u7528' ),
 			'Bank Card' => self::u( '\u94f6\u884c\u5361' ),
@@ -168,6 +172,10 @@ final class BEpusdt_WC_I18n {
 	private static function zh_tw() {
 		return array(
 			'USDT Payment' => 'USDT ' . self::u( '\u652f\u4ed8' ),
+			'Shown to customers during checkout. Leave blank to hide it on the frontend.' => self::u( '\u5728\u7d50\u5e33\u6642\u986f\u793a\u7d66\u5ba2\u6236\u3002\u7559\u7a7a\u5247\u524d\u53f0\u4e0d\u986f\u793a\u3002' ),
+			'Shown under the payment method on checkout. Leave blank to hide it on the frontend.' => self::u( '\u5728\u7d50\u5e33\u652f\u4ed8\u65b9\u5f0f\u4e0b\u65b9\u986f\u793a\u3002\u7559\u7a7a\u5247\u524d\u53f0\u4e0d\u986f\u793a\u3002' ),
+			'Optional checkout description.' => self::u( '\u53ef\u9078\u7684\u7d50\u5e33\u8aaa\u660e\u3002' ),
+			'Visual payment options only; no real payment functionality.' => self::u( '\u8996\u89ba\u5316\u9078\u9805\uff0c\u65e0\u5b9e\u8d28\u529f\u80fd\u3002' ),
 			'Available' => self::u( '\u53ef\u7528' ),
 			'Unavailable' => self::u( '\u4e0d\u53ef\u7528' ),
 			'Bank Card' => self::u( '\u9280\u884c\u5361' ),

@@ -37,13 +37,15 @@ class BEpusdt_WC_API {
 	 */
 	public function create_transaction( $order, $trade_type = '' ) {
 		$timeout = max( 120, absint( $this->gateway->get_option( 'expires_in', 1200 ) ) );
-		$trade_type = $trade_type ? sanitize_text_field( $trade_type ) : $this->gateway->get_option( 'trade_type', 'usdt.trc20' );
+		$enabled_trade_types = $this->gateway->get_enabled_trade_types();
+		$trade_type          = $trade_type ? sanitize_text_field( $trade_type ) : reset( $enabled_trade_types );
+		$trade_type          = $trade_type ? $trade_type : 'usdt.trc20';
 
 		$payload = array(
 			'order_id'     => $order->get_id() . '-' . str_replace( '.', '-', $trade_type ) . '-' . time(),
 			'name'         => sprintf( 'WooCommerce Order #%s', $order->get_order_number() ),
 			'amount'       => (float) $order->get_total(),
-			'fiat'         => strtoupper( $this->gateway->get_option( 'fiat', get_woocommerce_currency() ) ),
+			'fiat'         => strtoupper( get_woocommerce_currency() ),
 			'trade_type'   => $trade_type,
 			'notify_url'   => WC()->api_request_url( 'bepusdt_wc_notify' ),
 			'redirect_url' => $order->get_checkout_order_received_url(),

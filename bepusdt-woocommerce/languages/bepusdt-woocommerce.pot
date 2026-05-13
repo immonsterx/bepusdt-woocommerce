@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BEpusdt for WooCommerce 1.1.8\n"
+"Project-Id-Version: BEpusdt for WooCommerce 1.1.9\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-10 00:00+0000\n"
 "MIME-Version: 1.0\n"
@@ -9,6 +9,18 @@ msgstr ""
 "Text-Domain: bepusdt-woocommerce\n"
 
 msgid "USDT Payment"
+msgstr ""
+
+msgid "Shown to customers during checkout. Leave blank to hide it on the frontend."
+msgstr ""
+
+msgid "Shown under the payment method on checkout. Leave blank to hide it on the frontend."
+msgstr ""
+
+msgid "Optional checkout description."
+msgstr ""
+
+msgid "Visual payment options only; no real payment functionality."
 msgstr ""
 
 msgid "Available"
