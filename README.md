@@ -2,7 +2,7 @@
 
 BEpusdt for WooCommerce 是一个 WordPress + WooCommerce 加密货币收款插件，用于把 WooCommerce 订单接入 BEpusdt 后端收银台。插件负责在 WooCommerce 中注册支付网关、生成支付请求、展示前端支付入口，并通过 BEpusdt 回调或轮询同步订单支付状态。
 
-插件当前版本：`1.2.4`
+插件当前版本：`1.2.5`
 
 ## BEpusdt 是什么
 
@@ -183,6 +183,7 @@ https://github.com/v03413/BEpusdt/blob/main/docs/api/api.md
 - 查询订单状态：`GET /api/v1/order/check-status/{trade_id}`
 
 插件创建支付订单时会发送 WooCommerce 订单号、金额、当前 WooCommerce 货币、回调地址和所选 `trade_type`。BEpusdt 后端根据自己的配置生成对应收银台订单。
+发送到 BEpusdt 的商户订单号格式为 `WooCommerce订单ID-时间戳`，例如 `30637-1778659530`。后半段是 Unix 时间戳，用于避免同一个 WooCommerce 订单重复发起支付时产生重复商户订单号；所选链或币种会通过独立的 `trade_type` 参数发送，不再写入商户订单号。
 
 ## 订单状态同步
 

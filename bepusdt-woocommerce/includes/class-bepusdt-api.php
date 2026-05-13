@@ -42,7 +42,7 @@ class BEpusdt_WC_API {
 		$trade_type          = $trade_type ? $trade_type : 'usdt.trc20';
 
 		$payload = array(
-			'order_id'     => $order->get_id() . '-' . str_replace( '.', '-', $trade_type ) . '-' . time(),
+			'order_id'     => $order->get_id() . '-' . time(),
 			'name'         => sprintf( 'WooCommerce Order #%s', $order->get_order_number() ),
 			'amount'       => (float) $order->get_total(),
 			'fiat'         => strtoupper( get_woocommerce_currency() ),
