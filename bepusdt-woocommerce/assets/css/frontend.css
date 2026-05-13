@@ -26,15 +26,6 @@
 	width: 100%;
 }
 
-.bepusdt-wc-method-grid--crypto {
-	border-bottom: 1px solid #edf0f4;
-	padding-bottom: 12px;
-}
-
-.bepusdt-wc-method-grid--alternatives {
-	margin-top: 12px;
-}
-
 .bepusdt-wc-checkout .bepusdt-wc-method-grid button.bepusdt-wc-method {
 	appearance: none;
 	align-items: center;
@@ -232,15 +223,6 @@
 	overflow-wrap: anywhere;
 }
 
-.bepusdt-wc-payment__actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-	margin: 0 0 14px;
-}
-
-.bepusdt-wc-primary,
-.bepusdt-wc-secondary,
 .bepusdt-wc-shortcode-button {
 	align-items: center;
 	border-radius: 8px !important;
@@ -250,18 +232,6 @@
 	min-height: 44px;
 	padding: 0 16px !important;
 	text-decoration: none !important;
-}
-
-.bepusdt-wc-primary {
-	background: #111827 !important;
-	border-color: #111827 !important;
-	color: #fff !important;
-}
-
-.bepusdt-wc-secondary {
-	background: #fff !important;
-	border: 1px solid #d7dce5 !important;
-	color: #111827 !important;
 }
 
 .bepusdt-wc-chain-panel {
@@ -276,13 +246,6 @@
 	font-size: 16px;
 	font-weight: 800;
 	line-height: 1.35;
-	margin: 0;
-}
-
-.bepusdt-wc-chain-panel__hint {
-	color: #6b7280;
-	font-size: 14px;
-	line-height: 1.55;
 	margin: 0;
 }
 
