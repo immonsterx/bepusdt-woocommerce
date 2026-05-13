@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BEpusdt for WooCommerce 1.2.5\n"
+"Project-Id-Version: BEpusdt for WooCommerce 1.2.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-13 00:00+0000\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,24 @@ msgid "Frontend Payment Buttons"
 msgstr ""
 
 msgid "Choose which BEpusdt trade types customers can click on the payment page."
+msgstr ""
+
+msgid "Choose which BEpusdt trade types customers can click on the payment page. After saving, the plugin checks BEpusdt wallet availability and disables unconfigured wallets."
+msgstr ""
+
+msgid "Wallet not configured in BEpusdt"
+msgstr ""
+
+msgid "Last BEpusdt wallet check: %s. Save settings to refresh."
+msgstr ""
+
+msgid "Save settings once after entering the API URL and token to check BEpusdt wallet availability."
+msgstr ""
+
+msgid "Last BEpusdt wallet check failed: %s"
+msgstr ""
+
+msgid "BEpusdt did not return a trade ID."
 msgstr ""
 
 msgid "Visual Payment Options"
@@ -75,6 +93,9 @@ msgid "Trade ID"
 msgstr ""
 
 msgid "Payment Network"
+msgstr ""
+
+msgid "No cryptocurrency wallet is currently available. Please contact the store owner."
 msgstr ""
 
 msgid "After payment, this page will update automatically when the transaction is confirmed."

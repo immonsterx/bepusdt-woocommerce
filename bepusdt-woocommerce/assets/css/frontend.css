@@ -287,9 +287,9 @@
 }
 
 .bepusdt-wc-chain-grid {
-	display: grid;
+	display: flex;
+	flex-wrap: wrap;
 	gap: 10px;
-	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
 }
 
 .bepusdt-wc-chain-button {
@@ -299,9 +299,11 @@
 	border-radius: 8px;
 	color: #111827;
 	display: flex;
+	flex: 0 1 190px;
 	gap: 10px;
 	justify-content: center;
 	min-height: 54px;
+	max-width: 100%;
 	padding: 12px 14px;
 	text-decoration: none !important;
 	transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
@@ -340,6 +342,12 @@
 	}
 
 	.bepusdt-wc-chain-grid {
-		grid-template-columns: 1fr;
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.bepusdt-wc-chain-button {
+		flex-basis: auto;
+		width: 100%;
 	}
 }

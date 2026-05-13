@@ -37,6 +37,20 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Save settings, then refresh BEpusdt wallet availability for the payment buttons.
+	 *
+	 * @return bool
+	 */
+	public function process_admin_options() {
+		$saved = parent::process_admin_options();
+
+		$this->init_settings();
+		$this->refresh_trade_type_availability();
+
+		return $saved;
+	}
+
+	/**
 	 * Gateway settings.
 	 */
 	public function init_form_fields() {
@@ -79,12 +93,11 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 			),
 			'enabled_trade_types' => array(
 				'title'       => __( 'Frontend Payment Buttons', 'bepusdt-woocommerce' ),
-				'type'        => 'multiselect',
+				'type'        => 'trade_types',
 				'default'     => array( 'usdt.trc20', 'usdt.polygon', 'usdt.erc20' ),
 				'options'     => $this->trade_type_options(),
-				'description' => __( 'Choose which BEpusdt trade types customers can click on the payment page.', 'bepusdt-woocommerce' ),
+				'description' => __( 'Choose which BEpusdt trade types customers can click on the payment page. After saving, the plugin checks BEpusdt wallet availability and disables unconfigured wallets.', 'bepusdt-woocommerce' ),
 				'desc_tip'    => true,
-				'class'       => 'wc-enhanced-select',
 			),
 			'expires_in'         => array(
 				'title'             => __( 'Payment Expiration', 'bepusdt-woocommerce' ),
@@ -316,6 +329,107 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Render frontend trade type buttons with BEpusdt availability state.
+	 *
+	 * @param string $key Field key.
+	 * @param array  $data Field data.
+	 * @return string
+	 */
+	public function generate_trade_types_html( $key, $data ) {
+		$field_key   = $this->get_field_key( $key );
+		$defaults    = array(
+			'title'       => '',
+			'disabled'    => false,
+			'desc_tip'    => false,
+			'description' => '',
+			'options'     => array(),
+		);
+		$data        = wp_parse_args( $data, $defaults );
+		$description = $this->get_description_html( $data );
+		$selected    = $this->get_option( $key, array() );
+		$available   = $this->get_cached_available_trade_types();
+		$checked_at  = absint( $this->get_option( 'trade_types_checked_at', 0 ) );
+		$error       = (string) $this->get_option( 'trade_types_check_error', '' );
+
+		if ( ! is_array( $selected ) ) {
+			$selected = array_filter( array_map( 'trim', explode( ',', (string) $selected ) ) );
+		}
+
+		ob_start();
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+				<label><?php echo wp_kses_post( $data['title'] ); ?> <?php echo wp_kses_post( $this->get_tooltip_html( $data ) ); ?></label>
+			</th>
+			<td class="forminp">
+				<fieldset>
+					<div class="bepusdt-admin-trade-types">
+						<?php foreach ( $data['options'] as $trade_type => $label ) : ?>
+							<?php
+							$is_available = ! is_array( $available ) || in_array( $trade_type, $available, true );
+							$is_disabled  = $data['disabled'] || ! $is_available;
+							?>
+							<label class="bepusdt-admin-trade-type<?php echo $is_available ? '' : ' bepusdt-admin-trade-type--disabled'; ?>">
+								<input type="checkbox" name="<?php echo esc_attr( $field_key ); ?>[]" value="<?php echo esc_attr( $trade_type ); ?>" <?php checked( in_array( $trade_type, $selected, true ) && $is_available ); ?> <?php disabled( $is_disabled, true ); ?> />
+								<span class="bepusdt-admin-trade-type__label"><?php echo esc_html( $label ); ?></span>
+								<?php if ( ! $is_available ) : ?>
+									<span class="bepusdt-admin-trade-type__status"><?php esc_html_e( 'Wallet not configured in BEpusdt', 'bepusdt-woocommerce' ); ?></span>
+								<?php endif; ?>
+							</label>
+						<?php endforeach; ?>
+					</div>
+					<?php echo wp_kses_post( $description ); ?>
+					<?php if ( $checked_at ) : ?>
+						<p class="description"><?php echo esc_html( sprintf( __( 'Last BEpusdt wallet check: %s. Save settings to refresh.', 'bepusdt-woocommerce' ), date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $checked_at ) ) ); ?></p>
+					<?php else : ?>
+						<p class="description"><?php esc_html_e( 'Save settings once after entering the API URL and token to check BEpusdt wallet availability.', 'bepusdt-woocommerce' ); ?></p>
+					<?php endif; ?>
+					<?php if ( $error ) : ?>
+						<p class="description bepusdt-admin-trade-type-error"><?php echo esc_html( sprintf( __( 'Last BEpusdt wallet check failed: %s', 'bepusdt-woocommerce' ), $error ) ); ?></p>
+					<?php endif; ?>
+				</fieldset>
+				<style>
+					.bepusdt-admin-trade-types {
+						display: grid;
+						gap: 8px;
+						grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+						max-width: 760px;
+					}
+					.bepusdt-admin-trade-type {
+						align-items: center;
+						background: #fff;
+						border: 1px solid #dcdcde;
+						border-radius: 6px;
+						display: flex;
+						gap: 8px;
+						margin: 0;
+						min-height: 38px;
+						padding: 8px 10px;
+					}
+					.bepusdt-admin-trade-type--disabled {
+						background: #f6f7f7;
+						border-color: #dcdcde;
+						color: #8c8f94;
+					}
+					.bepusdt-admin-trade-type__label {
+						font-weight: 500;
+					}
+					.bepusdt-admin-trade-type__status {
+						color: #b32d2e;
+						font-size: 12px;
+						margin-left: auto;
+					}
+					.bepusdt-admin-trade-type-error {
+						color: #b32d2e;
+					}
+				</style>
+			</td>
+		</tr>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
 	 * Render a sortable checkbox list for visual payment options.
 	 *
 	 * @param string $key Field key.
@@ -476,6 +590,11 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	public function validate_enabled_trade_types_field( $key, $value ) {
 		$value   = is_array( $value ) ? array_map( 'sanitize_text_field', wp_unslash( $value ) ) : array();
 		$allowed = array_keys( $this->trade_type_options() );
+		$available = $this->get_cached_available_trade_types();
+
+		if ( is_array( $available ) ) {
+			$allowed = array_values( array_intersect( $allowed, $available ) );
+		}
 
 		return array_values( array_intersect( $value, $allowed ) );
 	}
@@ -558,9 +677,19 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 		}
 
 		$allowed = array_keys( $this->trade_type_options() );
+		$available = $this->get_cached_available_trade_types();
+
+		if ( is_array( $available ) ) {
+			$allowed = array_values( array_intersect( $allowed, $available ) );
+		}
+
 		$enabled = array_values( array_intersect( $enabled, $allowed ) );
 
-		return $enabled ? $enabled : array( 'usdt.trc20' );
+		if ( $enabled || is_array( $available ) ) {
+			return $enabled;
+		}
+
+		return array( 'usdt.trc20' );
 	}
 
 	/**
@@ -592,6 +721,152 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	 */
 	public function format_trade_type_button_label( $trade_type ) {
 		return $this->get_trade_type_label( $trade_type );
+	}
+
+	/**
+	 * Refresh cached BEpusdt wallet availability.
+	 */
+	private function refresh_trade_type_availability() {
+		$api = new BEpusdt_WC_API( $this );
+
+		$order = $api->create_availability_probe_order();
+		if ( is_wp_error( $order ) ) {
+			$this->save_trade_type_availability( null, $order->get_error_message() );
+			return;
+		}
+
+		$trade_id = isset( $order['trade_id'] ) ? sanitize_text_field( $order['trade_id'] ) : '';
+
+		if ( ! $trade_id ) {
+			$this->save_trade_type_availability( null, __( 'BEpusdt did not return a trade ID.', 'bepusdt-woocommerce' ) );
+			return;
+		}
+
+		$methods = $api->get_payment_methods( $trade_id );
+		$api->cancel_transaction( $trade_id );
+
+		if ( is_wp_error( $methods ) ) {
+			$this->save_trade_type_availability( null, $methods->get_error_message() );
+			return;
+		}
+
+		$available = $this->extract_trade_types_from_methods( $methods );
+		$this->save_trade_type_availability( $available, '' );
+	}
+
+	/**
+	 * Store BEpusdt wallet availability in gateway settings.
+	 *
+	 * @param array|null $available Available trade types, or null to keep existing cache.
+	 * @param string     $error Error message.
+	 */
+	private function save_trade_type_availability( $available, $error = '' ) {
+		if ( is_array( $available ) ) {
+			$this->settings['available_trade_types'] = array_values( array_unique( $available ) );
+			$this->settings['trade_types_checked_at'] = time();
+		}
+
+		$this->settings['trade_types_check_error'] = wc_clean( $error );
+
+		update_option( $this->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $this->settings ), 'yes' );
+	}
+
+	/**
+	 * Read cached available trade types.
+	 *
+	 * @return array|null
+	 */
+	private function get_cached_available_trade_types() {
+		$available = $this->get_option( 'available_trade_types', null );
+
+		if ( null === $available || '' === $available ) {
+			return null;
+		}
+
+		if ( ! is_array( $available ) ) {
+			$available = array_filter( array_map( 'trim', explode( ',', (string) $available ) ) );
+		}
+
+		return array_values( array_intersect( $available, array_keys( $this->trade_type_options() ) ) );
+	}
+
+	/**
+	 * Convert BEpusdt cashier methods to plugin trade types.
+	 *
+	 * @param array $payload BEpusdt methods response data.
+	 * @return array
+	 */
+	private function extract_trade_types_from_methods( $payload ) {
+		$methods = isset( $payload['methods'] ) && is_array( $payload['methods'] ) ? $payload['methods'] : array();
+		$types   = array();
+
+		foreach ( $methods as $method ) {
+			if ( ! is_array( $method ) ) {
+				continue;
+			}
+
+			$type = $this->trade_type_from_method( $method );
+			if ( $type ) {
+				$types[] = $type;
+			}
+		}
+
+		return array_values( array_intersect( array_unique( $types ), array_keys( $this->trade_type_options() ) ) );
+	}
+
+	/**
+	 * Map one BEpusdt cashier method to a trade type.
+	 *
+	 * @param array $method BEpusdt method row.
+	 * @return string
+	 */
+	private function trade_type_from_method( $method ) {
+		$currency = isset( $method['currency'] ) ? strtolower( sanitize_text_field( $method['currency'] ) ) : '';
+		$network  = isset( $method['network'] ) ? strtolower( sanitize_text_field( $method['network'] ) ) : '';
+		$standard = isset( $method['token_net_name'] ) ? strtolower( sanitize_text_field( $method['token_net_name'] ) ) : '';
+
+		$network = str_replace( array( '_', '-' ), '', $network );
+		$standard = str_replace( array( '_', '-' ), '', $standard );
+
+		if ( 'trx' === $currency ) {
+			return 'tron.trx';
+		}
+
+		if ( 'eth' === $currency ) {
+			return 'ethereum.eth';
+		}
+
+		if ( 'bnb' === $currency ) {
+			return 'bsc.bnb';
+		}
+
+		if ( in_array( $currency, array( 'usdt', 'usdc' ), true ) ) {
+			if ( 'tron' === $network || 'trc20' === $standard ) {
+				return $currency . '.trc20';
+			}
+
+			if ( in_array( $network, array( 'ethereum', 'eth' ), true ) || 'erc20' === $standard ) {
+				return $currency . '.erc20';
+			}
+
+			if ( 'bsc' === $network || 'bep20' === $standard ) {
+				return $currency . '.bep20';
+			}
+
+			if ( in_array( $network, array( 'polygon', 'aptos', 'solana', 'base', 'plasma' ), true ) ) {
+				return $currency . '.' . $network;
+			}
+
+			if ( in_array( $network, array( 'xlayer', 'okxlayer' ), true ) ) {
+				return $currency . '.xlayer';
+			}
+
+			if ( in_array( $network, array( 'arbitrum', 'arbitrumone' ), true ) ) {
+				return $currency . '.arbitrum';
+			}
+		}
+
+		return '';
 	}
 
 	/**
