@@ -65,31 +65,25 @@ if ( $payment_error ) {
 
 	<div class="bepusdt-wc-chain-panel">
 		<p class="bepusdt-wc-chain-panel__title"><?php esc_html_e( 'Payment Network', 'bepusdt-woocommerce' ); ?></p>
-		<?php if ( $enabled_chains ) : ?>
-			<div class="bepusdt-wc-chain-grid">
-				<?php foreach ( $enabled_chains as $chain ) : ?>
-					<?php
-					$url = add_query_arg(
-						array(
-							'action'     => 'bepusdt_wc_start_payment',
-							'order_id'   => $order_id,
-							'key'        => $order->get_order_key(),
-							'trade_type' => $chain,
-							'_wpnonce'   => $start_nonce,
-						),
-						admin_url( 'admin-post.php' )
-					);
-					?>
-					<a class="bepusdt-wc-chain-button" href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener">
-						<span class="bepusdt-wc-chain-button__name"><?php echo esc_html( $this->format_trade_type_button_label( $chain ) ); ?></span>
-					</a>
-				<?php endforeach; ?>
-			</div>
-		<?php else : ?>
-			<div class="bepusdt-wc-payment__error" role="alert">
-				<?php esc_html_e( 'No cryptocurrency wallet is currently available. Please contact the store owner.', 'bepusdt-woocommerce' ); ?>
-			</div>
-		<?php endif; ?>
+		<div class="bepusdt-wc-chain-grid">
+			<?php foreach ( $enabled_chains as $chain ) : ?>
+				<?php
+				$url = add_query_arg(
+					array(
+						'action'     => 'bepusdt_wc_start_payment',
+						'order_id'   => $order_id,
+						'key'        => $order->get_order_key(),
+						'trade_type' => $chain,
+						'_wpnonce'   => $start_nonce,
+					),
+					admin_url( 'admin-post.php' )
+				);
+				?>
+				<a class="bepusdt-wc-chain-button" href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener">
+					<span class="bepusdt-wc-chain-button__name"><?php echo esc_html( $this->format_trade_type_button_label( $chain ) ); ?></span>
+				</a>
+			<?php endforeach; ?>
+		</div>
 		<p class="bepusdt-wc-payment__status" data-bepusdt-status aria-live="polite">
 			<?php esc_html_e( 'After payment, this page will update automatically when the transaction is confirmed.', 'bepusdt-woocommerce' ); ?>
 		</p>

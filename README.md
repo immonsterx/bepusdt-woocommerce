@@ -2,7 +2,7 @@
 
 BEpusdt for WooCommerce 是一个 WordPress + WooCommerce 加密货币收款插件，用于把 WooCommerce 订单接入 BEpusdt 后端收银台。插件负责在 WooCommerce 中注册支付网关、生成支付请求、展示前端支付入口，并通过 BEpusdt 回调或轮询同步订单支付状态。
 
-插件当前版本：`1.2.6`
+插件当前版本：`1.2.8`
 
 ## BEpusdt 是什么
 
@@ -95,7 +95,7 @@ WooCommerce > Settings > Payments > BEpusdt Crypto
 - Description：前台支付方式描述，留空则前台不显示。
 - BEpusdt API URL：BEpusdt 后端地址，例如 `https://pay.example.com`。
 - API Token / Secret：BEpusdt API 密钥，保存后后台按令牌字符数量显示星号。
-- Frontend Payment Buttons：Thank You 页面显示哪些 BEpusdt 交易类型按钮。当前内置 BEpusdt 文档列出的主流币种和网络，默认启用 USDT TRC20、USDT Polygon、USDT ERC20。保存设置后会检查 BEpusdt 当前订单可用付款方式；BEpusdt 后端没有配置钱包地址的链会在插件后台置灰，不能勾选到前台。
+- Frontend Payment Buttons：Thank You 页面显示哪些 BEpusdt 交易类型按钮。当前内置 BEpusdt 文档列出的主流币种和网络，默认启用 USDT TRC20、USDT Polygon、USDT ERC20。
 - Payment Expiration：支付过期时间，单位为秒。
 - Visual Payment Options：默认关闭，可勾选 USDT、VISA、PayPal、Mastercard，并可拖动排序；后台怎么排序，前台就怎么显示。该选项仅用于视觉化展示，无实质支付功能。
 - Payment Guide HTML：用于设置前台 USDT 支付教程提示 HTML，留空则 USDT 选中时不显示提示。
@@ -161,7 +161,7 @@ assets/images/mastercard.svg
 4. 插件调用 BEpusdt API 创建支付交易。
 5. 创建成功后，在新页面打开 BEpusdt 收银台。
 
-如果 BEpusdt 后端没有配置任意已启用交易类型的钱包地址，例如 USDT-Solana、ETH、USDC-Polygon 等，BEpusdt 会返回创建失败信息。插件会把该错误显示回订单支付页面，不会让 WordPress 产生致命错误。
+如果 BEpusdt 后端没有配置任意已启用交易类型的钱包地址，例如 USDT-Solana、ETH、USDC-Polygon 等，BEpusdt 会返回创建失败信息。插件会把该错误显示回 WooCommerce Thank You 感谢订单页面的支付卡片中，不会让 WordPress 产生致命错误。
 链按钮使用固定宽度排列；只有一个按钮时不会铺满整行，启用多个按钮时会从左到右继续排列，移动端会自动变为单列。
 
 支付卡片模板文件：

@@ -268,7 +268,7 @@ final class BEpusdt_WooCommerce {
 			wc_add_notice( $message, 'error' );
 		}
 
-		wp_safe_redirect( $order->get_checkout_payment_url( true ) );
+		wp_safe_redirect( $order->get_checkout_order_received_url() );
 		exit;
 	}
 

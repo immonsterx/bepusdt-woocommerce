@@ -58,57 +58,6 @@ class BEpusdt_WC_API {
 	}
 
 	/**
-	 * Create a temporary cashier order for detecting configured payment methods.
-	 *
-	 * @return array|WP_Error
-	 */
-	public function create_availability_probe_order() {
-		$payload = array(
-			'order_id'     => 'bepusdt-wc-wallet-check',
-			'name'         => 'WooCommerce wallet availability check',
-			'amount'       => 1,
-			'fiat'         => strtoupper( get_woocommerce_currency() ),
-			'notify_url'   => WC()->api_request_url( 'bepusdt_wc_notify' ),
-			'redirect_url' => admin_url( 'admin.php?page=wc-settings&tab=checkout&section=bepusdt' ),
-			'timeout'      => 180,
-		);
-
-		$payload['signature'] = $this->sign( $payload );
-
-		return $this->request( 'POST', '/api/v1/order/create-order', $payload );
-	}
-
-	/**
-	 * Read all payment methods available for a cashier order.
-	 *
-	 * @param string $trade_id BEpusdt trade ID.
-	 * @return array|WP_Error
-	 */
-	public function get_payment_methods( $trade_id ) {
-		$payload = array(
-			'trade_id' => sanitize_text_field( $trade_id ),
-		);
-
-		return $this->request( 'POST', '/api/v1/pay/methods', $payload );
-	}
-
-	/**
-	 * Cancel a BEpusdt transaction.
-	 *
-	 * @param string $trade_id BEpusdt trade ID.
-	 * @return array|WP_Error
-	 */
-	public function cancel_transaction( $trade_id ) {
-		$payload = array(
-			'trade_id' => sanitize_text_field( $trade_id ),
-		);
-
-		$payload['signature'] = $this->sign( $payload );
-
-		return $this->request( 'POST', '/api/v1/order/cancel-transaction', $payload );
-	}
-
-	/**
 	 * Query a BEpusdt order status.
 	 *
 	 * @param string $trade_id BEpusdt trade ID.
