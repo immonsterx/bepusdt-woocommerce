@@ -1,4 +1,17 @@
 # BEpusdt for WooCommerce
+### 前台支付方式显示
+
+![前台支付方式显示](docs/images/frontend-payment-method.png)
+
+### 结账页
+![结账页](docs/images/checkout-page.png)
+
+## 已知问题
+
+以下问题在当前版本中已知存在，暂未修复：
+
+- 结账页面的支付名称修改为：加密货币，更为合适。
+- 设置标题和描述后，再次清空保存，前端还显示原来文字。
 
 插件当前版本：`1.4.2`
 
@@ -67,6 +80,8 @@ WooCommerce > Settings > Payments > BEpusdt Crypto
 ```
 
 ## 后台设置
+
+![后台设置](docs/images/admin-settings.png)
 
 - Enable/Disable：启用或停用支付网关。
 - Title：前台支付方式标题，留空则前台不显示。
