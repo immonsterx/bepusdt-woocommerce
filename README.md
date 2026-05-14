@@ -30,7 +30,7 @@ BEpusdt 后端支持多条区块链网络和多种代币收款。实际可用的
 ## 主要功能
 
 - 在 WooCommerce 后台注册 `BEpusdt Crypto` 支付网关。
-- 结账页保持 WooCommerce 默认流程，只显示一个轻量的 USDT 支付入口。
+- 结账页保持 WooCommerce 默认流程，只显示一个轻量的 加密货币 支付入口。
 - 结账页可选显示自定义支付教程 HTML，例如 USDT 支付教程链接。
 - 用户提交订单后进入 WooCommerce Thank You 页面。
 - Thank You 页面显示订单信息和后台启用的加密货币支付按钮。
