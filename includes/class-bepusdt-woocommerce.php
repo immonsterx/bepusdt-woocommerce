@@ -85,9 +85,7 @@ final class BEpusdt_WooCommerce {
 			return;
 		}
 
-		$should_load = is_checkout() || is_order_received_page() || is_wc_endpoint_url( 'order-pay' ) || is_account_page();
-
-		if ( ! $should_load ) {
+		if ( ! $this->should_enqueue_frontend_assets() ) {
 			return;
 		}
 
@@ -118,6 +116,25 @@ final class BEpusdt_WooCommerce {
 				'paidMessage' => __( 'Payment confirmed. Refreshing order status...', 'bepusdt-woocommerce' ),
 			)
 		);
+	}
+
+	/**
+	 * Keep plugin assets away from unrelated WooCommerce pages.
+	 *
+	 * @return bool
+	 */
+	private function should_enqueue_frontend_assets() {
+		if ( is_checkout() || is_order_received_page() || is_wc_endpoint_url( 'order-pay' ) ) {
+			return true;
+		}
+
+		if ( is_singular() ) {
+			global $post;
+
+			return $post instanceof WP_Post && has_shortcode( $post->post_content, 'bepusdt_payment_button' );
+		}
+
+		return false;
 	}
 
 	/**

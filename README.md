@@ -1,6 +1,6 @@
 # BEpusdt for WooCommerce
 
-插件当前版本：`1.4.0`
+插件当前版本：`1.4.1`
 
 BEpusdt for WooCommerce 是一个 WordPress + WooCommerce 加密货币收款插件，用于把 WooCommerce 订单接入 BEpusdt 后端收银台。插件负责在 WooCommerce 中注册支付网关、创建 BEpusdt 支付交易、展示前端支付入口，并通过 BEpusdt 回调或 WordPress Cron 轮询同步订单支付状态。
 

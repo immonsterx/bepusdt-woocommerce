@@ -242,6 +242,34 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	}
 
 	/**
+	 * Save an empty checkout description as an intentional blank value.
+	 *
+	 * @param string $key Field key.
+	 * @param string $value Submitted value.
+	 * @return string
+	 */
+	public function validate_description_field( $key, $value ) {
+		return wp_kses_post( wp_unslash( (string) $value ) );
+	}
+
+	/**
+	 * Persist blank checkout copy fields instead of falling back to old values.
+	 *
+	 * @return bool
+	 */
+	public function process_admin_options() {
+		$saved = parent::process_admin_options();
+
+		$this->force_save_blank_copy_field( 'title' );
+		$this->force_save_blank_copy_field( 'description' );
+
+		$this->title       = $this->get_setting_preserve_empty( 'title', __( 'Crypto Payment', 'bepusdt-woocommerce' ) );
+		$this->description = $this->get_setting_preserve_empty( 'description', '' );
+
+		return $saved;
+	}
+
+	/**
 	 * Render token field without exposing stored encrypted content.
 	 *
 	 * @param string $key Field key.
@@ -304,6 +332,34 @@ class WC_Gateway_BEpusdt extends WC_Payment_Gateway {
 	 */
 	private function get_setting_preserve_empty( $key, $default = '' ) {
 		return array_key_exists( $key, $this->settings ) ? $this->settings[ $key ] : $default;
+	}
+
+	/**
+	 * Force WooCommerce to store submitted blank values for checkout copy.
+	 *
+	 * @param string $key Field key.
+	 */
+	private function force_save_blank_copy_field( $key ) {
+		$field_key = $this->get_field_key( $key );
+
+		if ( ! isset( $_POST[ $field_key ] ) ) {
+			return;
+		}
+
+		$value = wp_unslash( (string) $_POST[ $field_key ] );
+
+		if ( 'description' === $key ) {
+			$value = wp_kses_post( $value );
+		} else {
+			$value = wc_clean( $value );
+		}
+
+		if ( isset( $this->settings[ $key ] ) && $this->settings[ $key ] === $value ) {
+			return;
+		}
+
+		$this->settings[ $key ] = $value;
+		update_option( $this->get_option_key(), $this->settings );
 	}
 
 	/**
