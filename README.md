@@ -1,4 +1,8 @@
 # BEpusdt for WooCommerce
+![GitHub stars](https://img.shields.io/github/stars/immonsterx/bepusdt-woocommerce?style=flat-square)
+![GitHub forks](https://img.shields.io/github/forks/immonsterx/bepusdt-woocommerce?style=flat-square)
+![GitHub release](https://img.shields.io/github/v/release/immonsterx/bepusdt-woocommerce?style=flat-square)
+![GitHub downloads](https://img.shields.io/github/downloads/immonsterx/bepusdt-woocommerce/total?style=flat-square)
 ### 前台支付方式显示
 
 ![前台支付方式显示](docs/images/frontend-payment-method.png)
@@ -199,3 +203,12 @@ bepusdt-woocommerce
 - 不建议引入大型前端库，当前前端只使用原生 CSS 和 JS。
 - API Token 不要输出到前端，不要写入日志明文。
 - 调试日志需要继续保持敏感字段脱敏。
+
+## 定制开发 / 技术支持
+
+本插件作为轻量化的开源项目提供，用于将 WooCommerce 订单接入 BEpusdt 收银台。
+
+如果你需要额外的定制功能、界面调整、部署协助或业务场景适配，可以尝试联系作者进行付费定制。
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=immonsterx/bepusdt-woocommerce&type=Date)](https://www.star-history.com/#immonsterx/bepusdt-woocommerce&Date)
