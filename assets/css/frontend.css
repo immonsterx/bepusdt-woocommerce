@@ -19,8 +19,8 @@
 }
 
 .bepusdt-wc-method-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
+	display: flex;
+	flex-wrap: wrap;
 	gap: 12px;
 	margin: 0 0 10px;
 	width: 100%;
@@ -44,7 +44,9 @@
 	text-align: left;
 	touch-action: manipulation;
 	transition: opacity 140ms ease;
-	width: 100%;
+	flex: 0 0 168px;
+	max-width: 100%;
+	width: 168px;
 }
 
 .bepusdt-wc-checkout .bepusdt-wc-method-grid button.bepusdt-wc-method:hover,
@@ -285,10 +287,6 @@
 @media (max-width: 700px) {
 	.bepusdt-wc-payment {
 		padding: 16px;
-	}
-
-	.bepusdt-wc-method-grid {
-		grid-template-columns: 1fr;
 	}
 
 	.bepusdt-wc-payment__details div {
