@@ -17,16 +17,13 @@ BEpusdt 后端支持多条区块链网络和多种代币收款。实际可用的
 ## 主要功能
 
 - 在 WooCommerce 后台注册 `BEpusdt Crypto` 支付网关。
-- 结账页保持 WooCommerce 默认流程，只显示一个轻量的 USDT 视觉支付入口。
+- 结账页保持 WooCommerce 默认流程，只显示一个轻量的 USDT 支付入口。
 - 结账页可选显示自定义支付教程 HTML，例如 USDT 支付教程链接。
 - 用户提交订单后进入 WooCommerce Thank You 页面。
 - Thank You 页面显示订单信息和后台启用的加密货币支付按钮。
 - 用户点击某个链或代币按钮后，插件向 BEpusdt 创建支付交易。
 - 创建成功后跳转到 BEpusdt 收银台完成付款。
 - 支持 BEpusdt 回调和 WordPress Cron 轮询同步 WooCommerce 订单状态。
-- BEpusdt 返回错误时，错误会显示回 Thank You 页面支付卡片，不让 WordPress 产生致命错误。
-
-公共版已移除除 USDT 以外的其他视觉化支付入口及其前后端代码。
 
 ## 目录结构
 
@@ -78,7 +75,7 @@ WooCommerce > Settings > Payments > BEpusdt Crypto
 - API Token / Secret：BEpusdt API 密钥，保存后后台会用星号隐藏。
 - Frontend Payment Buttons：Thank You 页面显示哪些 BEpusdt 交易类型按钮。
 - Payment Expiration：支付过期时间，单位为秒。
-- Payment Guide HTML：用于设置结账页 USDT 支付教程提示，留空则结账页不显示提示；HTML 中的链接会显示点状下划线。
+- Payment Guide HTML：用于设置结账页 USDT 支付教程提示，留空则结账页不显示提示。
 - Automatic Status Polling：定时查询待付款订单状态，防止回调失败导致订单不同步。
 - Debug Log：记录 WooCommerce 调试日志，敏感字段会脱敏。
 
@@ -112,7 +109,7 @@ https://your-site.example/wc-api/bepusdt_wc_notify
 
 ## 前端显示逻辑
 
-结账页只显示 USDT 视觉支付入口。USDT 默认选中，用户点击后仍保持选中状态。如果后台填写了 `Payment Guide HTML`，结账页会显示自定义教程内容；如果留空，则不显示提示。
+结账页 USDT支付选项 默认选中，用户点击后仍保持选中状态。如果后台填写了 `Payment Guide HTML`，结账页会显示自定义教程内容；如果留空，则不显示提示。
 
 Thank You 页面会显示真正用于创建 BEpusdt 交易的加密货币支付按钮。按钮来源于后台 `Frontend Payment Buttons` 设置。用户点击某个按钮后，插件会使用对应 `trade_type` 调用 BEpusdt 创建交易。
 
