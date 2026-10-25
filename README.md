@@ -82,15 +82,16 @@ bepusdt-woocommerce/
 ## 安装方法
 
 1. 确认 WordPress 和 WooCommerce 已安装并启用。
-2. 部署 BEpusdt 后端，并确认 BEpusdt API 和收银台可以访问。
-3. 将插件上传到：
+2. 从 [GitHub Releases](https://github.com/immonsterx/bepusdt-woocommerce/releases/latest) 下载正式安装包 `bepusdt-woocommerce.zip`。
+3. 部署 BEpusdt 后端，并确认 BEpusdt API 和收银台可以访问。
+4. 在 WordPress 后台上传安装包，或将解压后的插件目录上传到：
 
 ```text
 wp-content/plugins/
 ```
 
-4. 在 WordPress 后台启用插件。
-5. 进入 WooCommerce 支付设置：
+5. 在 WordPress 后台启用插件。
+6. 进入 WooCommerce 支付设置：
 
 ```text
 WooCommerce > Settings > Payments > BEpusdt Crypto
@@ -173,16 +174,17 @@ https://github.com/v03413/BEpusdt/blob/main/docs/api/api.md
 
 ### 点击支付后收银台显示 404
 
-插件不会自行拼接 BEpusdt 收银台路径，而是直接跳转创建支付接口返回的 `payment_url`。较旧的 BEpusdt 版本可能返回 `/pay/checkout-counter/{trade_id}`，当前版本使用 `/pay/checkout/{trade_id}`；两种路径都应由对应版本的 BEpusdt 服务处理。
+插件不会自行拼接或改写 BEpusdt 收银台路径，而是直接跳转创建支付接口返回的 `payment_url`。BEpusdt 的部分旧版本返回 `/pay/checkout-counter/{trade_id}`，当前版本返回 `/pay/checkout/{trade_id}`；返回该链接的 BEpusdt 服务必须同时提供对应版本的收银台路由。
 
 如果创建交易成功、点击支付后却显示页面不存在，请检查：
 
 - 插件里的 `BEpusdt API URL` 必须是对外可访问的 BEpusdt 根地址，不能填 WordPress 商城域名，也不要在末尾附加 `/api`。
-- BEpusdt 的 `APP_URI`（或后台的 API App URI）必须填写同一个对外收银台根地址，否则接口会返回错误域名的 `payment_url`。
-- 反向代理必须把 `/pay/*` 转发给 BEpusdt；当前版收银台还需要能访问 `/checkout/*` 静态资源。
-- 如果服务仍返回 `/pay/checkout-counter/*`，应确认实际部署的旧版 BEpusdt 包含该路由，或升级 BEpusdt 后重新测试。
+- BEpusdt API 返回的 `payment_url` 域名必须指向实际运行 BEpusdt 的公开域名；反向代理应正确传递请求域名和 HTTPS 协议。
+- 反向代理不能只转发 `/api/*`，还必须把 `/pay/*` 转发给同一个 BEpusdt 服务；当前版收银台还需要允许访问 `/checkout/*` 静态资源。
+- 如果返回 `/pay/checkout-counter/*` 但该路径为 404，通常是 BEpusdt API 与收银台使用了不一致的版本、升级后服务未重启，或反向代理没有转发 `/pay/*`。请统一 BEpusdt 版本并重启服务后重试。
+- 不要在插件中把 `checkout-counter` 强行替换成 `checkout`，否则可能破坏仍使用旧路由的 BEpusdt 部署。
 
-这类 404 发生在 BEpusdt 收银台服务或反向代理层，不应在 WooCommerce 插件里硬编码改写 `payment_url`。
+判断方法：查看创建支付接口原始响应中的 `data.payment_url`。如果该地址本身打开就是 404，问题位于 BEpusdt 服务或反向代理层，而不是 WooCommerce 插件跳转逻辑。
 
 ## 支持的 BEpusdt 交易类型
 
