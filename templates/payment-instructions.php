@@ -25,9 +25,9 @@ if ( $payment_error ) {
 }
 ?>
 
-<section class="bepusdt-wc-payment bepusdt-wc-payment--order-pay" data-bepusdt-payment data-order-id="<?php echo esc_attr( $order_id ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>">
+<section class="bepusdt-wc-payment bepusdt-wc-payment--order-pay" data-bepusdt-payment data-order-id="<?php echo esc_attr( $order_id ); ?>" data-order-key="<?php echo esc_attr( $order->get_order_key() ); ?>" data-nonce="<?php echo esc_attr( $nonce ); ?>">
 	<div class="bepusdt-wc-payment__main">
-		<h2 class="bepusdt-wc-payment__title"><?php esc_html_e( 'Choose a Payment Network', 'bepusdt-woocommerce' ); ?></h2>
+		<h2 class="bepusdt-wc-payment__title"><?php esc_html_e( 'Payment Information', 'bepusdt-woocommerce' ); ?></h2>
 		<?php if ( $payment_error ) : ?>
 			<div class="bepusdt-wc-payment__error" role="alert">
 				<?php echo esc_html( $payment_error ); ?>
@@ -52,7 +52,7 @@ if ( $payment_error ) {
 			</div>
 			<div>
 				<dt><?php esc_html_e( 'Payment Method', 'bepusdt-woocommerce' ); ?></dt>
-				<dd><?php echo esc_html( $order->get_payment_method_title() ? $order->get_payment_method_title() : __( 'Crypto Payment', 'bepusdt-woocommerce' ) ); ?></dd>
+				<dd><?php esc_html_e( 'Cryptocurrency', 'bepusdt-woocommerce' ); ?></dd>
 			</div>
 			<?php if ( $trade_id ) : ?>
 				<div>
@@ -64,8 +64,11 @@ if ( $payment_error ) {
 	</div>
 
 	<div class="bepusdt-wc-chain-panel">
-		<p class="bepusdt-wc-chain-panel__title"><?php esc_html_e( 'Payment Network', 'bepusdt-woocommerce' ); ?></p>
+		<p class="bepusdt-wc-chain-panel__title"><?php esc_html_e( 'Currency and Network', 'bepusdt-woocommerce' ); ?></p>
 		<div class="bepusdt-wc-chain-grid">
+			<?php if ( empty( $enabled_chains ) ) : ?>
+				<p><?php esc_html_e( 'No cryptocurrency payment network is available.', 'bepusdt-woocommerce' ); ?></p>
+			<?php endif; ?>
 			<?php foreach ( $enabled_chains as $chain ) : ?>
 				<?php
 				$url = add_query_arg(
@@ -79,8 +82,8 @@ if ( $payment_error ) {
 					admin_url( 'admin-post.php' )
 				);
 				?>
-				<a class="bepusdt-wc-chain-button" href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener">
-					<span class="bepusdt-wc-chain-button__name"><?php echo esc_html( $this->format_trade_type_button_label( $chain ) ); ?></span>
+				<a class="bepusdt-wc-chain-button" href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer">
+					<span class="bepusdt-wc-chain-button__name"><?php echo esc_html( $this->get_trade_type_label( $chain ) ); ?></span>
 				</a>
 			<?php endforeach; ?>
 		</div>

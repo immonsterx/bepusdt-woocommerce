@@ -1,83 +1,53 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BEpusdt for WooCommerce 1.4.2\n"
+"Project-Id-Version: BEpusdt for WooCommerce 1.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-13 00:00+0000\n"
+"POT-Creation-Date: 2026-10-25 00:00+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Text-Domain: bepusdt-woocommerce\n"
 
-msgid "BEpusdt Crypto"
+msgid "BEpusdt for WooCommerce"
 msgstr ""
 
-msgid "Accept cryptocurrency payments through a BEpusdt backend."
+msgid "为 WooCommerce 提供轻量级 BEpusdt 加密货币支付网关。"
 msgstr ""
 
-msgid "Crypto Payment"
+msgid "请前往 GitHub Release 页面查看版本说明。"
 msgstr ""
 
-msgid "Enable BEpusdt cryptocurrency payment"
+msgid "BEpusdt for WooCommerce requires WooCommerce to be installed and active."
 msgstr ""
 
-msgid "Shown to customers during checkout. Leave blank to hide it on the frontend."
+msgid "WooCommerce Order #%s"
 msgstr ""
 
-msgid "Shown under the payment method on checkout. Leave blank to hide it on the frontend."
+msgid "BEpusdt API URL is invalid."
 msgstr ""
 
-msgid "Optional checkout description."
+msgid "BEpusdt API token is missing."
 msgstr ""
 
-msgid "Frontend Payment Buttons"
+msgid "BEpusdt returned invalid JSON."
 msgstr ""
 
-msgid "Choose which BEpusdt trade types customers can click on the payment page."
+msgid "BEpusdt request failed."
 msgstr ""
 
-msgid "USDT payment option"
-msgstr ""
-
-msgid "USDT"
-msgstr ""
-
-msgid "Payment Guide HTML"
-msgstr ""
-
-msgid "Used to guide customers to a payment tutorial. Leave blank to hide it. Example: %s"
-msgstr ""
-
-msgid "A token is saved and hidden. Replace the stars only if you want to update it."
-msgstr ""
-
-msgid "Choose a Payment Network"
-msgstr ""
-
-msgid "Your order has been created. Select the network or token you want to pay with, then you will be redirected to the secure cryptocurrency checkout page."
-msgstr ""
-
-msgid "Order Total"
-msgstr ""
-
-msgid "Order Number"
-msgstr ""
-
-msgid "Order Date"
-msgstr ""
-
-msgid "Payment Method"
-msgstr ""
-
-msgid "Trade ID"
-msgstr ""
-
-msgid "Payment Network"
-msgstr ""
-
-msgid "After payment, this page will update automatically when the transaction is confirmed."
+msgid "Every five minutes"
 msgstr ""
 
 msgid "Payment confirmed. Refreshing order status..."
+msgstr ""
+
+msgid "The cryptocurrency payment expired. Choose a network to try again."
+msgstr ""
+
+msgid "Invalid request."
+msgstr ""
+
+msgid "Order not found."
 msgstr ""
 
 msgid "Invalid payment request."
@@ -98,10 +68,97 @@ msgstr ""
 msgid "Cryptocurrency payment expired."
 msgstr ""
 
+msgid "Pay with cryptocurrency"
+msgstr ""
+
+msgid "BEpusdt 加密货币支付"
+msgstr ""
+
+msgid "通过 BEpusdt 后端接收加密货币付款。"
+msgstr ""
+
+msgid "Crypto Payment"
+msgstr ""
+
+msgid "启用/禁用"
+msgstr ""
+
+msgid "启用 BEpusdt 加密货币支付"
+msgstr ""
+
+msgid "支付方式标题"
+msgstr ""
+
+msgid "显示在结账页，留空则不在前台显示。"
+msgstr ""
+
+msgid "加密货币支付"
+msgstr ""
+
+msgid "支付方式描述"
+msgstr ""
+
+msgid "显示在结账页支付方式下方，留空则不在前台显示。"
+msgstr ""
+
+msgid "可选的结账说明"
+msgstr ""
+
+msgid "BEpusdt API 地址"
+msgstr ""
+
+msgid "示例：https://pay.example.com"
+msgstr ""
+
+msgid "API 令牌/密钥"
+msgstr ""
+
+msgid "尽可能使用 WordPress 盐值加密存储。"
+msgstr ""
+
+msgid "前台支付按钮"
+msgstr ""
+
+msgid "选择客户可在付款信息卡片中点击的 BEpusdt 币种和网络。"
+msgstr ""
+
+msgid "支付有效期"
+msgstr ""
+
+msgid "支付有效期，单位为秒。"
+msgstr ""
+
+msgid "支付教程 HTML"
+msgstr ""
+
+msgid "用于显示支付教程，留空则不显示。示例：%s"
+msgstr ""
+
+msgid "自动状态轮询"
+msgstr ""
+
+msgid "定时查询待支付的 BEpusdt 订单"
+msgstr ""
+
+msgid "调试日志"
+msgstr ""
+
+msgid "启用调试日志"
+msgstr ""
+
+msgid "日志通过 WooCommerce 日志系统写入，敏感信息会被屏蔽。"
+msgstr ""
+
+msgid "USDT payment option"
+msgstr ""
+
+msgid "USDT"
+msgstr ""
+
 msgid "Awaiting customer to choose a payment network."
 msgstr ""
 
-msgid "Pay with cryptocurrency"
+msgid "令牌已保存并隐藏，仅在需要更新时替换星号。"
 msgstr ""
 
 msgid "USDT TRC20 (Tron)"
@@ -165,4 +222,97 @@ msgid "USDC Base"
 msgstr ""
 
 msgid "USDT Plasma"
+msgstr ""
+
+msgid "Payment Information"
+msgstr ""
+
+msgid "Your order has been created. Select the network or token you want to pay with, then you will be redirected to the secure cryptocurrency checkout page."
+msgstr ""
+
+msgid "Order Number"
+msgstr ""
+
+msgid "Order Date"
+msgstr ""
+
+msgid "Order Total"
+msgstr ""
+
+msgid "Payment Method"
+msgstr ""
+
+msgid "Cryptocurrency"
+msgstr ""
+
+msgid "Trade ID"
+msgstr ""
+
+msgid "Currency and Network"
+msgstr ""
+
+msgid "After payment, this page will update automatically when the transaction is confirmed."
+msgstr ""
+
+msgid "No cryptocurrency payment network is available."
+msgstr ""
+
+msgid "The order currency is not supported by BEpusdt."
+msgstr ""
+
+msgid "A cryptocurrency payment is already being created. Please wait a moment and try again."
+msgstr ""
+
+msgid "USDT TON"
+msgstr ""
+
+msgid "GRAM (TON)"
+msgstr ""
+
+msgid "支付图标自动适配"
+msgstr ""
+
+msgid "参考当前主题中其他支付方式图标的显示尺寸"
+msgstr ""
+
+msgid "如果主题中没有可参考的图标，则使用插件默认的自适应尺寸。"
+msgstr ""
+
+msgid "支付图标宽度"
+msgstr ""
+
+msgid "单位为像素；留空则自动。只填宽度或高度时会保留 SVG 原始宽高比。"
+msgstr ""
+
+msgid "支付图标高度"
+msgstr ""
+
+msgid "单位为像素；留空则自动。"
+msgstr ""
+
+msgid "支付图标宽高比"
+msgstr ""
+
+msgid "保留原始比例（完整显示）"
+msgstr ""
+
+msgid "保留原始比例（允许裁切）"
+msgstr ""
+
+msgid "按设定宽高拉伸"
+msgstr ""
+
+msgid "同时设置宽度和高度时生效。"
+msgstr ""
+
+msgid "BEpusdt API 地址必须是服务根地址，不能以 /api 或 /api/v1 结尾。"
+msgstr ""
+
+msgid "卸载数据"
+msgstr ""
+
+msgid "卸载插件时删除 BEpusdt 网关设置"
+msgstr ""
+
+msgid "订单中的历史付款记录将保留，避免破坏财务审计数据。"
 msgstr ""

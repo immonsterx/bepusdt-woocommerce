@@ -36,16 +36,22 @@ class BEpusdt_WC_API {
 	 * @return array|WP_Error
 	 */
 	public function create_transaction( $order, $trade_type = '' ) {
-		$timeout = max( 120, absint( $this->gateway->get_option( 'expires_in', 1200 ) ) );
+		$timeout             = max( 120, absint( $this->gateway->get_option( 'expires_in', 1200 ) ) );
 		$enabled_trade_types = $this->gateway->get_enabled_trade_types();
 		$trade_type          = $trade_type ? sanitize_text_field( $trade_type ) : reset( $enabled_trade_types );
-		$trade_type          = $trade_type ? $trade_type : 'usdt.trc20';
+
+		if ( ! $trade_type || ! in_array( $trade_type, $enabled_trade_types, true ) ) {
+			return new WP_Error( 'bepusdt_missing_trade_type', __( 'No cryptocurrency payment network is available.', 'bepusdt-woocommerce' ) );
+		}
+
+		$unique_suffix     = substr( str_replace( '-', '', wp_generate_uuid4() ), 0, 8 );
+		$merchant_order_id = sprintf( '%d-%d-%s', $order->get_id(), time(), $unique_suffix );
 
 		$payload = array(
-			'order_id'     => $order->get_id() . '-' . time(),
-			'name'         => sprintf( 'WooCommerce Order #%s', $order->get_order_number() ),
+			'order_id'     => $merchant_order_id,
+			'name'         => sprintf( __( 'WooCommerce Order #%s', 'bepusdt-woocommerce' ), $order->get_order_number() ),
 			'amount'       => (float) $order->get_total(),
-			'fiat'         => strtoupper( get_woocommerce_currency() ),
+			'fiat'         => strtoupper( $order->get_currency() ),
 			'trade_type'   => $trade_type,
 			'notify_url'   => WC()->api_request_url( 'bepusdt_wc_notify' ),
 			'redirect_url' => $order->get_checkout_order_received_url(),
@@ -54,7 +60,13 @@ class BEpusdt_WC_API {
 
 		$payload['signature'] = $this->sign( $payload );
 
-		return $this->request( 'POST', '/api/v1/order/create-transaction', $payload );
+		$result = $this->request( 'POST', '/api/v1/order/create-transaction', $payload );
+
+		if ( is_array( $result ) ) {
+			$result['_merchant_order_id'] = $merchant_order_id;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -65,14 +77,37 @@ class BEpusdt_WC_API {
 	 */
 	public function check_status( $trade_id ) {
 		$trade_id = sanitize_text_field( $trade_id );
-		$result   = $this->request( 'GET', '/api/v1/order/check-status/' . rawurlencode( $trade_id ) );
+		$result   = $this->request( 'POST', '/api/v1/pay/info', array( 'trade_id' => $trade_id ) );
 
 		if ( is_wp_error( $result ) ) {
 			$this->log( 'Status query failed: ' . $result->get_error_message(), array( 'trade_id' => $trade_id ), 'warning' );
 			return false;
 		}
 
+		if ( isset( $result['money'] ) && ! isset( $result['amount'] ) ) {
+			$result['amount'] = $result['money'];
+		}
+
 		return $result;
+	}
+
+	/**
+	 * Cancel a BEpusdt transaction that is no longer the active payment attempt.
+	 *
+	 * @param string $trade_id BEpusdt trade ID.
+	 * @return bool
+	 */
+	public function cancel_transaction( $trade_id ) {
+		$payload = array( 'trade_id' => sanitize_text_field( $trade_id ) );
+		$payload['signature'] = $this->sign( $payload );
+		$result = $this->request( 'POST', '/api/v1/order/cancel-transaction', $payload );
+
+		if ( is_wp_error( $result ) ) {
+			$this->log( 'Unable to cancel superseded transaction.', array( 'trade_id' => $trade_id ), 'warning' );
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -89,7 +124,7 @@ class BEpusdt_WC_API {
 		$signature = (string) $payload['signature'];
 		unset( $payload['signature'] );
 
-		return hash_equals( $signature, $this->sign( $payload ) );
+		return hash_equals( $this->sign( $payload ), $signature );
 	}
 
 	/**
@@ -170,7 +205,7 @@ class BEpusdt_WC_API {
 		$json = json_decode( $body, true );
 
 		if ( ! is_array( $json ) ) {
-			$this->log( 'API returned invalid JSON.', array( 'code' => $code, 'body' => $body ), 'error' );
+			$this->log( 'API returned invalid JSON.', array( 'code' => $code, 'body' => substr( $body, 0, 2000 ) ), 'error' );
 			return new WP_Error( 'bepusdt_invalid_json', __( 'BEpusdt returned invalid JSON.', 'bepusdt-woocommerce' ) );
 		}
 
@@ -179,9 +214,8 @@ class BEpusdt_WC_API {
 		$api_ok      = 200 === $status_code;
 
 		if ( ! $http_ok || ! $api_ok ) {
-			$message = isset( $json['message'] ) ? $json['message'] : __( 'BEpusdt request failed.', 'bepusdt-woocommerce' );
-			$this->log( 'API request failed: ' . $message, $json, 'error' );
-			return new WP_Error( 'bepusdt_api_failed', $message );
+			$this->log( 'API request failed.', $json, 'error' );
+			return new WP_Error( 'bepusdt_api_failed', __( 'BEpusdt request failed.', 'bepusdt-woocommerce' ) );
 		}
 
 		$data = isset( $json['data'] ) && is_array( $json['data'] ) ? $json['data'] : $json;
@@ -313,6 +347,9 @@ class BEpusdt_WC_API {
 					$value[ $key ] = $this->redact( $item );
 				}
 			}
+		} elseif ( is_string( $value ) ) {
+			$value = preg_replace( '/([?&](?:key|_wpnonce|token|secret|signature)=)[^&\s]+/i', '$1***', $value );
+			$value = preg_replace( '/("?(?:token|secret|key|signature)"?\s*[:=]\s*")[^"]+/i', '$1***', $value );
 		}
 
 		return $value;

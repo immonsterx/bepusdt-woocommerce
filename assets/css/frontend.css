@@ -1,8 +1,9 @@
 .bepusdt-wc-checkout,
 .bepusdt-wc-payment {
+	--bepusdt-surface: var(--wp--preset--color--base, #fff);
+	--bepusdt-text: var(--wp--preset--color--contrast, #111827);
 	box-sizing: border-box;
-	color: #111827;
-	width: 100%;
+	color: var(--bepusdt-text);
 }
 
 .bepusdt-wc-checkout {
@@ -10,6 +11,7 @@
 	display: block;
 	flex-basis: 100%;
 	margin-top: 12px;
+	width: 100%;
 }
 
 .bepusdt-wc-usdt-option {
@@ -22,7 +24,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 12px;
-	margin: 0 0 10px;
+	margin: 0;
 	width: 100%;
 }
 
@@ -33,20 +35,20 @@
 	border: 0 !important;
 	border-radius: 18px;
 	box-shadow: none !important;
-	color: #111827;
+	color: var(--bepusdt-text);
 	cursor: pointer;
 	display: flex;
 	flex-direction: row;
 	font: inherit;
 	gap: 10px;
-	min-height: 64px;
+	min-height: 48px;
 	padding: 0 !important;
 	text-align: left;
 	touch-action: manipulation;
 	transition: opacity 140ms ease;
-	flex: 0 0 168px;
+	flex: 0 1 auto;
 	max-width: 100%;
-	width: 168px;
+	width: auto;
 }
 
 .bepusdt-wc-checkout .bepusdt-wc-method-grid button.bepusdt-wc-method:hover,
@@ -54,19 +56,23 @@
 	background: transparent !important;
 	border: 0 !important;
 	box-shadow: none !important;
-	outline: none;
 	transform: none;
+}
+
+.bepusdt-wc-checkout .bepusdt-wc-method-grid button.bepusdt-wc-method:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
 }
 
 .bepusdt-wc-checkout .bepusdt-wc-method-card {
 	align-items: center;
-	background: #fff;
+	background: var(--bepusdt-surface);
 	border: 1px solid #d8dee8;
 	border-radius: 18px;
 	box-shadow: none;
 	display: flex;
 	justify-content: center;
-	min-height: 64px;
+	min-height: 48px;
 	padding: 8px 10px;
 	transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
 	width: 100%;
@@ -103,16 +109,31 @@
 }
 
 .bepusdt-wc-method--image img {
-	aspect-ratio: 1.62 / 1;
-	border-radius: 14px;
 	display: block;
-	height: 52px;
-	max-height: none;
+	max-height: 100%;
 	max-width: 100%;
-	object-fit: contain;
-	overflow: hidden;
+	object-fit: var(--bepusdt-icon-fit, contain);
 	transition: opacity 140ms ease, transform 140ms ease;
-	width: 132px;
+}
+
+.bepusdt-wc-checkout[data-icon-width=""][data-icon-height=""] .bepusdt-wc-method--image img {
+	height: var(--bepusdt-icon-height, clamp(2rem, 2.5em, 3.25rem));
+	width: auto;
+}
+
+.bepusdt-wc-checkout:not([data-icon-width=""])[data-icon-height=""] .bepusdt-wc-method--image img {
+	height: auto;
+	width: var(--bepusdt-icon-width);
+}
+
+.bepusdt-wc-checkout[data-icon-width=""]:not([data-icon-height=""]) .bepusdt-wc-method--image img {
+	height: var(--bepusdt-icon-height);
+	width: auto;
+}
+
+.bepusdt-wc-checkout:not([data-icon-width=""]):not([data-icon-height=""]) .bepusdt-wc-method--image img {
+	height: var(--bepusdt-icon-height);
+	width: var(--bepusdt-icon-width);
 }
 
 .bepusdt-wc-method--image.bepusdt-wc-method--active img {
@@ -120,42 +141,81 @@
 }
 
 .bepusdt-wc-notice {
-	background: #111827;
-	border: 0;
-	border-radius: 8px;
-	color: #fff;
+	background: transparent !important;
+	border: 0 !important;
+	border-radius: 0;
+	box-shadow: none !important;
+	color: inherit;
 	font-size: 13px;
 	line-height: 1.45;
-	margin: 12px 0 0;
-	padding: 11px 14px;
+	margin: 10px 0 0;
+	padding: 0 !important;
+	text-align: left;
+	width: 100%;
 }
 
 .bepusdt-wc-notice a {
-	border-bottom: 2px dotted currentColor;
-	color: #fff;
+	border: 0 !important;
+	border-bottom: 2px dotted currentColor !important;
+	box-shadow: none !important;
 	font-weight: 700;
 	padding-bottom: 2px;
-	text-decoration: none;
-}
-
-.bepusdt-wc-notice-link-text {
-	border-bottom: 2px dotted currentColor;
-	padding-bottom: 2px;
+	text-decoration: none !important;
 }
 
 .bepusdt-wc-notice a:hover,
 .bepusdt-wc-notice a:focus {
-	color: #d8fff0;
-	outline: none;
+	text-decoration: none !important;
+}
+
+.bepusdt-wc-notice a:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+}
+
+.bepusdt-wc-block-label {
+	align-items: center;
+	display: flex;
+	gap: 10px;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.bepusdt-wc-block-icon {
+	display: block;
+	height: clamp(1.5rem, 2em, 2.5rem);
+	max-height: 48px;
+	max-width: min(45%, 180px);
+	object-fit: contain;
+	width: auto;
+}
+
+.bepusdt-wc-block-content > p {
+	margin: 0 0 10px;
 }
 
 .bepusdt-wc-payment {
-	background: #fff;
+	align-self: stretch;
+	background: var(--bepusdt-surface);
 	border: 1px solid #e7eaf0;
 	border-radius: 8px;
+	box-sizing: border-box !important;
 	box-shadow: 0 14px 38px rgba(15, 23, 42, 0.06);
+	clear: both;
+	display: block;
+	flex: 0 0 var(--bepusdt-payment-card-width, 100%) !important;
+	float: none !important;
+	grid-column: 1 / -1;
+	inline-size: var(--bepusdt-payment-card-width, 100%) !important;
+	justify-self: stretch;
 	margin: 24px 0;
+	margin-left: var(--bepusdt-payment-card-offset, 0) !important;
+	max-inline-size: var(--bepusdt-payment-card-width, 100%) !important;
+	max-width: var(--bepusdt-payment-card-width, 100%) !important;
+	min-inline-size: 0;
+	min-width: 0;
 	padding: 24px;
+	width: var(--bepusdt-payment-card-width, 100%) !important;
 }
 
 .bepusdt-wc-payment__main {
@@ -235,7 +295,7 @@
 }
 
 .bepusdt-wc-chain-panel__title {
-	color: #111827;
+	color: var(--bepusdt-text);
 	font-size: 16px;
 	font-weight: 800;
 	line-height: 1.35;
@@ -250,10 +310,10 @@
 
 .bepusdt-wc-chain-button {
 	align-items: center;
-	background: #fff;
-	border: 1px solid #111827;
+	background: var(--bepusdt-surface) !important;
+	border: 1px solid var(--bepusdt-text) !important;
 	border-radius: 8px;
-	color: #111827;
+	color: var(--bepusdt-text) !important;
 	display: flex;
 	flex: 0 1 190px;
 	gap: 10px;
@@ -267,12 +327,16 @@
 
 .bepusdt-wc-chain-button:hover,
 .bepusdt-wc-chain-button:focus {
-	background: #111827;
-	border-color: #111827;
-	box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
-	color: #fff;
-	outline: none;
+	background: #f8fafc !important;
+	border-color: #64748b !important;
+	box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+	color: var(--bepusdt-text) !important;
 	transform: translateY(-1px);
+}
+
+.bepusdt-wc-chain-button:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
 }
 
 .bepusdt-wc-chain-button__name {
