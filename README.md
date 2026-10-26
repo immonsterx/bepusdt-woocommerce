@@ -231,35 +231,6 @@ bepusdt-woocommerce
 
 用于在指定页面输出某个 WooCommerce 订单的支付按钮。为避免泄露订单支付链接，仅订单所属的已登录客户或商店管理员可见。
 
-## 维护注意事项
-
-- 每次修改代码后需要递增插件版本号。
-- 版本号位置：
-  - `bepusdt.php` 文件头部 `Version`
-  - `bepusdt.php` 中的 `BEPUSDT_WC_VERSION`
-  - `languages/bepusdt-woocommerce.pot` 中的 `Project-Id-Version`
-- 前端资源使用 `BEPUSDT_WC_VERSION` 作为缓存版本号，修改 CSS/JS 后必须更新版本。
-- 发布 ZIP 的顶层目录必须固定为 `bepusdt-woocommerce/`，这样在 WordPress 后台上传新版本时才能识别并覆盖旧插件。
-- 不建议直接修改 WooCommerce 模板文件，优先使用插件模板和 WooCommerce hooks。
-- 不建议引入大型前端库，当前前端只使用原生 CSS 和 JS。
-- API Token 不要输出到前端，不要写入日志明文。
-- 调试日志需要继续保持敏感字段脱敏。
-
-## 开发验证
-
-下列轻量契约测试不会放入发布 ZIP：
-
-```text
-php tests/api-contract.php
-php tests/cron-contract.php
-php tests/payment-state.php
-php tests/updater-contract.php
-node tests/blocks-contract.js
-node tests/frontend-layout.js
-node tests/i18n-contract.js
-```
-
-`frontend-layout.js` 需要 Playwright 和本机 Chromium/Chrome，用于验证图标自动尺寸以及 Thank You 卡片跟随主题容器的布局逻辑。
 
 ## 定制开发 / 技术支持
 
